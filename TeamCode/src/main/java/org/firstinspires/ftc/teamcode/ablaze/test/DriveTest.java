@@ -1,13 +1,13 @@
+package org.firstinspires.ftc.teamcode.ablaze.test;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy202122.ablaze.common.AblazeRobot;
-import org.firstinspires.ftc.teamcode.FreightFrenzy202122.ablaze.common.AblazeRobotTest;
+import org.firstinspires.ftc.teamcode.ablaze.common.*;
 
 
 @Autonomous
-public class MotorTest extends LinearOpMode {
+public class DriveTest extends LinearOpMode {
 
     @Override
     public void runOpMode(){

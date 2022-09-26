@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy202122.ablaze.common;
+package org.firstinspires.ftc.teamcode.ablaze.common;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -39,5 +39,39 @@ public class AblazeRobot
       rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
       rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
       leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+    }
+
+    public void driveTime(double power){
+        leftBackDrive.setPower(power);
+        leftFrontDrive.setPower(power);
+        rightBackDrive.setPower(power);
+        rightFrontDrive.setPower(power);
+    }
+
+    public void stop() {
+        leftBackDrive.setPower(0);
+        leftFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+    }
+
+    public WebcamName getWebCam() {
+        return webCam;
+    }
+
+    public DcMotor getLeftBackDrive() {
+        return leftBackDrive;
+    }
+
+    public DcMotor getLeftFrontDrive() {
+        return leftFrontDrive;
+    }
+
+    public DcMotor getRightBackDrive() {
+        return rightBackDrive;
+    }
+
+    public DcMotor getRightFrontDrive() {
+        return rightFrontDrive;
     }
 }
