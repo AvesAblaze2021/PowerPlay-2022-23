@@ -54,4 +54,8 @@ public class PracticeRobot
     public WebcamName getWebCam() {
         return webCam;
     }
+    
+    public double getDefaultPower(){
+        return defaultPower;
+    }
 }
