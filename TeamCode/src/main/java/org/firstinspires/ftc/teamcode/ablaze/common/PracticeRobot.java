@@ -17,15 +17,9 @@ public class PracticeRobot
     private DcMotor rightFrontDrive = null;
     private WebcamName webCam;
 
-    private double defaultPower = 0;
+    private double defaultPower = 0.5;
     private BNO055IMU imu;
-
-    private double defaultMinPosition = 0.3;
-    private double defaultMaxPosition = 0.5;
     
-    private double signalPosition = 0.5;
-
-
     public void initialize(HardwareMap hwMap){
       leftFrontDrive = hwMap.get(DcMotor.class, "leftFrontMotor"); // Port: 0
       rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontMotor"); // Port: 1
@@ -39,5 +33,25 @@ public class PracticeRobot
       rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
       rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
       leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+    }
+    
+    public DcMotor getLeftBackDrive() {
+        return leftBackDrive;
+    }
+
+    public DcMotor getLeftFrontDrive() {
+        return leftFrontDrive;
+    }
+
+    public DcMotor getRightBackDrive() {
+        return rightBackDrive;
+    }
+
+    public DcMotor getRightFrontDrive() {
+        return rightFrontDrive;
+    }
+    
+    public WebcamName getWebCam() {
+        return webCam;
     }
 }
