@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.FreightFrenzy202122.ablaze.common;
+package org.firstinspires.ftc.teamcode.ablaze.common;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
