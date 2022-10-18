@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.FreightFrenzy202122.ablaze.common.PracticeRobot;
+import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
 import org.firstinspires.ftc.teamcode.ablaze.common.*;
 
 //Runs each motor once
