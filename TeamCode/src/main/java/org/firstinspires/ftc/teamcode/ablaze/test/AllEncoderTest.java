@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 
 @Autonomous
-public class EncoderAllTest extends LinearOpMode {
+public class AllEncoderTest extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private AblazeRobot ablazeRobot = new AblazeRobot();
     private double motorPower = .5;
@@ -23,12 +23,10 @@ public class EncoderAllTest extends LinearOpMode {
         ablazeRobot.initialize(hardwareMap);
 
         // Enable Encoders
-        ablazeRobot.useEncoderForWheels(true);
 
         waitForStart();
 
-        //Stop and rest Encoders
-        ablazeRobot.stopAndResetWheelsEncoder();
+        //Stop and reset Encoders
 
         // Get Ticks
         double ticksPerRevLF = ablazeRobot.getLeftFrontDrive().getMotorType().getTicksPerRev();
@@ -73,8 +71,7 @@ public class EncoderAllTest extends LinearOpMode {
             runtime.reset();
 
             while (opModeIsActive() &&
-                    (runtime.milliseconds() < 30000) &&
-                    (ablazeRobot.areWheelsBusy())) {
+                    (runtime.milliseconds() < 30000)){ //also check if wheels are busy
 
                 // New Position
                 int npLF = ablazeRobot.getLeftFrontDrive().getCurrentPosition();
@@ -97,7 +94,7 @@ public class EncoderAllTest extends LinearOpMode {
         ablazeRobot.getRightBackDrive().setPower(0);
 
         // Turn off RUN_TO_POSITION
-        ablazeRobot.useEncoderForWheels(true);
+        //ablazeRobot.useEncoderForWheels(true);
 
     } // runOpMode end
 } // class end
