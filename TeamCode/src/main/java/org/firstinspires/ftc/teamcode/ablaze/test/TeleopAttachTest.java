@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
 
-//Teleop test program for controlling the drivetrain
+//Teleop test program for testing attachments
 @TeleOp
 public class TeleopDriveTest extends LinearOpMode {
     PracticeRobot robot = new PracticeRobot();
@@ -47,7 +47,7 @@ public class TeleopDriveTest extends LinearOpMode {
      */
     @Override
     public void loop(){
-        driveWithTwoJoysticks();
+
     }
 
     /*
@@ -56,41 +56,5 @@ public class TeleopDriveTest extends LinearOpMode {
     @Override
     public void stop() {
         robot.stop();
-    }
-
-    // drive with joysticks
-    public void driveWithTwoJoysticks() {
-        double px = gamepad1.left_stick_x;
-        double py = -gamepad1.left_stick_y;
-        double pa = (gamepad1.right_stick_x - gamepad1.right_stick_y);
-        if (Math.abs(pa) < 0.03) pa = 0;
-        double p1 = -px + py + pa;
-        double p2 = px + py + pa;
-        double p3 = -px + py - pa;
-        double p4 = px + py - pa;
-        if(gamepad1.left_bumper) {
-            p1 /= 3;
-            p2 /= 3;
-            p3 /= 3;
-            p4 /= 3;
-        }
-        if(gamepad1.right_bumper) {
-            p1 /= 1.2;
-            p2 /= 1.2;
-            p3 /= 1.2;
-            p4 /= 1.2;
-        }
-        else if (isLoop){
-            p1 /= 1.6;
-            p2 /= 1.6;
-            p3 /= 1.6;
-            p4 /= 1.6;
-        }
-
-        //sets the speed of the drive motors
-        ablazeRobot.getLeftBackDrive().setPower(p1);
-        ablazeRobot.getLeftFrontDrive().setPower(p2);
-        ablazeRobot.getRightFrontDrive().setPower(p3);
-        ablazeRobot.getRightBackDrive().setPower(p4);
     }
 }
