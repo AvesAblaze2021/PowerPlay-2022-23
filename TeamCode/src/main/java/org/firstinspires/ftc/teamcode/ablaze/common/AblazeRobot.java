@@ -9,30 +9,35 @@ import com.qualcomm.robotcore.hardware.LED;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
-public class AblazeRobot
-{
+public class AblazeRobot {
     private DcMotor leftBackDrive = null;
     private DcMotor leftFrontDrive = null;
     private DcMotor rightBackDrive = null;
     private DcMotor rightFrontDrive = null;
+    private DcMotor horizontalSlideMotor = null;
+    private DcMotor verticalSlideMotor = null;
     private WebcamName webCam;
 
     private double defaultPower = 0;
     private BNO055IMU imu;
 
-    public void initialize(HardwareMap hwMap){
-      leftFrontDrive = hwMap.get(DcMotor.class, "leftFrontMotor"); // Port: 0
-      rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontMotor"); // Port: 1
-      rightBackDrive = hwMap.get(DcMotor.class, "rightBackMotor"); // Port: 2
-      leftBackDrive = hwMap.get(DcMotor.class, "leftBackMotor"); // Port: 3
-      
-      imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
-      webCam = hwMap.get(WebcamName.class, "VuforiaCam"); // Port: 3
-      
-      leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-      rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-      rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-      leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+    public void initialize(HardwareMap hwMap) {
+        leftFrontDrive = hwMap.get(DcMotor.class, "leftFrontMotor"); // Port: 0
+        rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontMotor"); // Port: 1
+        rightBackDrive = hwMap.get(DcMotor.class, "rightBackMotor"); // Port: 2
+        leftBackDrive = hwMap.get(DcMotor.class, "leftBackMotor"); // Port: 3
+        horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalMotor");
+        verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalMotor");
+
+                imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
+        webCam = hwMap.get(WebcamName.class, "VuforiaCam"); // Port: 3
+
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        horizontalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        verticalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
     }
 
     public WebcamName getWebCam() {
@@ -51,13 +56,17 @@ public class AblazeRobot
         return rightBackDrive;
     }
 
-    public DcMotor getRightFrontDrive() {
-        return rightFrontDrive;
+    public DcMotor getRightFrontDrive() { return rightFrontDrive; }
+
+    public DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
+
+    public DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
+
+    public double getDefaultPower() {
+        return defaultPower;
     }
 
-    public double getDefaultPower(){return defaultPower;}
-
-    public void driveTime(double power){
+    public void driveTime(double power) {
         leftBackDrive.setPower(power);
         leftFrontDrive.setPower(power);
         rightBackDrive.setPower(power);
@@ -70,4 +79,5 @@ public class AblazeRobot
         rightBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
     }
+
 }
