@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.ablaze.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
 
 //Teleop test program for testing attachments
 @TeleOp
-public class TeleopDriveTest extends LinearOpMode {
+public class TeleopAttachTest extends OpMode {
     PracticeRobot robot = new PracticeRobot();
 
     /*
