@@ -18,7 +18,7 @@ import java.util.List;
 @Autonomous
 public class AblazeAuto extends LinearOpMode {
     AblazeRobot robot = new AblazeRobot();
-    AblazeTFOD tfod = new AblazeTFOD();
+    //AblazeTFOD tfod = new AblazeTFOD();
 
     String location = "A1";
 

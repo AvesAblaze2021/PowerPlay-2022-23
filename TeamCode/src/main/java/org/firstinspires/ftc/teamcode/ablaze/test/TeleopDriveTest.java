@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
 @TeleOp
 public class TeleopDriveTest extends OpMode {
     PracticeRobot robot = new PracticeRobot();
+    //boolean isLoop = true;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -56,7 +57,7 @@ public class TeleopDriveTest extends OpMode {
      */
     @Override
     public void stop() {
-        robot.stop();
+
     }
 
     // drive with joysticks
@@ -75,13 +76,22 @@ public class TeleopDriveTest extends OpMode {
             p3 /= 3;
             p4 /= 3;
         }
-        if(gamepad1.right_bumper) {
+        else if(gamepad1.right_bumper) {
             p1 /= 1.2;
             p2 /= 1.2;
             p3 /= 1.2;
             p4 /= 1.2;
         }
+        /*
+        Restore if else statement doesn't work
         else if (isLoop){
+            p1 /= 1.6;
+            p2 /= 1.6;
+            p3 /= 1.6;
+            p4 /= 1.6;
+        }
+         */
+        else{
             p1 /= 1.6;
             p2 /= 1.6;
             p3 /= 1.6;
@@ -89,9 +99,9 @@ public class TeleopDriveTest extends OpMode {
         }
 
         //sets the speed of the drive motors
-        ablazeRobot.getLeftBackDrive().setPower(p1);
-        ablazeRobot.getLeftFrontDrive().setPower(p2);
-        ablazeRobot.getRightFrontDrive().setPower(p3);
-        ablazeRobot.getRightBackDrive().setPower(p4);
+        robot.getLeftBackDrive().setPower(p1);
+        robot.getLeftFrontDrive().setPower(p2);
+        robot.getRightFrontDrive().setPower(p3);
+        robot.getRightBackDrive().setPower(p4);
     }
 }

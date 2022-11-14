@@ -56,6 +56,6 @@ public class TeleopAttachTest extends OpMode {
      */
     @Override
     public void stop() {
-        robot.stop();
+        //robot.stop();
     }
 }
