@@ -33,9 +33,9 @@ public class AblazeRobot {
         webCam = hwMap.get(WebcamName.class, "VuforiaCam"); // Port: 3
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         horizontalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
         verticalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
     }

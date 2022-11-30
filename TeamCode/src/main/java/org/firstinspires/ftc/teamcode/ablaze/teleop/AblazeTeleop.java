@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
 @TeleOp(name="AblazeTeleop", group="AblazeRobot")
 public class AblazeTeleop extends OpMode{
-    AblazeRobot ablazeRobot = new AblazeRobot();
+    PracticeRobot practiceRobot = new PracticeRobot();
     ElapsedTime runtime = new ElapsedTime();
 
     private boolean isLoop = false;
@@ -39,7 +39,7 @@ public class AblazeTeleop extends OpMode{
         telemetry.update();
 
         // Initialize Robot
-        ablazeRobot.initialize(hardwareMap);
+        practiceRobot.initialize(hardwareMap);
 
         // Use Encoder for Arm
 
@@ -121,7 +121,6 @@ public class AblazeTeleop extends OpMode{
     @Override
     public void stop() {
         isLoop = false;
-        ablazeRobot.stop();
     }
 
     // drive with joysticks
@@ -154,9 +153,9 @@ public class AblazeTeleop extends OpMode{
         }
 
         //sets the speed of the drive motors
-        ablazeRobot.getLeftBackDrive().setPower(p1);
-        ablazeRobot.getLeftFrontDrive().setPower(p2);
-        ablazeRobot.getRightFrontDrive().setPower(p3);
-        ablazeRobot.getRightBackDrive().setPower(p4);
+        practiceRobot.getLeftBackDrive().setPower(p1);
+        practiceRobot.getLeftFrontDrive().setPower(p2);
+        practiceRobot.getRightFrontDrive().setPower(p3);
+        practiceRobot.getRightBackDrive().setPower(p4);
     }
 }
