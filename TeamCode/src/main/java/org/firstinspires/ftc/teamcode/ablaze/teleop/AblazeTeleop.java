@@ -75,6 +75,7 @@ public class AblazeTeleop extends OpMode{
         //Check all states
         switch(attachState){
             case START: //Initial state - all gamepad conditionals go here, leads to other States
+
                 if(gamepad2.a){
                     attachState = AttachmentState.OPEN;
                 }
@@ -113,6 +114,7 @@ public class AblazeTeleop extends OpMode{
 
         //State machine doesn't interfere with drivetrain code here
         driveWithTwoJoysticks();
+        linearSlides();
     }
 
     /*
@@ -158,5 +160,19 @@ public class AblazeTeleop extends OpMode{
         ablazeRobot.getLeftFrontDrive().setPower(p2);
         ablazeRobot.getRightFrontDrive().setPower(p3);
         ablazeRobot.getRightBackDrive().setPower(p4);
+    }
+    public void linearSlides(){
+        double rt = gamepad1.right_trigger;
+        double lt = gamepad1.left_trigger;
+        double bumperValue = 0;
+        double triggerValue = rt - lt;
+        if(gamepad1.right_bumper){
+            bumperValue += 1;
+        }
+        if (gamepad1.left_bumper){
+            bumperValue -= 1;
+        }
+        ablazeRobot.getVerticalSlideMotor().setPower(triggerValue);
+        ablazeRobot.getHorizontalSlideMotor().setPower(bumperValue);
     }
 }
