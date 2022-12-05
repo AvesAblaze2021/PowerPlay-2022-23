@@ -171,7 +171,8 @@ public class AblazeTeleop extends OpMode{
         if (gamepad1.left_bumper){
             bumperValue -= 1;
         }
-        ablazeRobot.getVerticalSlideMotor().setPower(triggerValue);
-        ablazeRobot.getHorizontalSlideMotor().setPower(bumperValue);
+
+        AblazeRobot.getVerticalSlideMotor().setPower(triggerValue);
+        AblazeRobot.getHorizontalSlideMotor().setPower(bumperValue);
     }
 }

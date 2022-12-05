@@ -17,8 +17,8 @@ public class LinearSlideTest extends LinearOpMode{
   @Override
   public void runOpMode(){
     robot.initalize(hardwareMap);
-    DcMotor horizontal = robot.getHorizontalSlideMotor();
     DcMotor vertical = robot.getVerticalSlideMotor();
+    DcMotor horizontal = robot.getHorizontalSlideMotor();
     moveSlideEncoder(vertical, 200, 500); //timeout in MS
   }
   

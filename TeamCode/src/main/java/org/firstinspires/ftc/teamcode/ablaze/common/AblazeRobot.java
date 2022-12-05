@@ -14,8 +14,8 @@ public class AblazeRobot {
     private DcMotor leftFrontDrive = null;
     private DcMotor rightBackDrive = null;
     private DcMotor rightFrontDrive = null;
-    private DcMotor horizontalSlideMotor = null;
-    private DcMotor verticalSlideMotor = null;
+    private static DcMotor horizontalSlideMotor = null;
+    private static DcMotor verticalSlideMotor = null;
     private WebcamName webCam;
     private BNO055IMU  imu;
 
@@ -58,9 +58,9 @@ public class AblazeRobot {
 
     public DcMotor getRightFrontDrive() { return rightFrontDrive; }
 
-    public DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
+    public static DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
 
-    public DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
+    public static DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
 
     public double getDefaultPower() {
         return defaultPower;
