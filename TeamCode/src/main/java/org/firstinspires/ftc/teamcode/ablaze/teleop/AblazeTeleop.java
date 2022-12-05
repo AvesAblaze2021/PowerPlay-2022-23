@@ -154,8 +154,12 @@ public class AblazeTeleop extends OpMode{
 
         //sets the speed of the drive motors
         practiceRobot.getLeftBackDrive().setPower(p1);
+        telemetry.addData("motor power of left back motor is", p1);
         practiceRobot.getLeftFrontDrive().setPower(p2);
+        telemetry.addData("motor power of left front motor is", p2);
         practiceRobot.getRightFrontDrive().setPower(p3);
+        telemetry.addData("motor power of Right front motor is", p3);
         practiceRobot.getRightBackDrive().setPower(p4);
+        telemetry.addData("motor power of Right back motor is", p4);
     }
 }
