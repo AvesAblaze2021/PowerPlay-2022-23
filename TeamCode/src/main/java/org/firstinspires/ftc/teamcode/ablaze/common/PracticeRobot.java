@@ -27,7 +27,7 @@ public class PracticeRobot
       leftBackDrive = hwMap.get(DcMotor.class, "leftBackMotor"); // Port: 3
       
       imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
-      webCam = hwMap.get(WebcamName.class, "VuforiaCam"); // Port: 3
+      //webCam = hwMap.get(WebcamName.class, "VuforiaCam"); // Port: 3
       
       leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
       rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -51,9 +51,9 @@ public class PracticeRobot
         return rightFrontDrive;
     }
     
-    public WebcamName getWebCam() {
-        return webCam;
-    }
+    //public WebcamName getWebCam() {
+        //return webCam;
+    //}
     
     public double getDefaultPower(){
         return defaultPower;
