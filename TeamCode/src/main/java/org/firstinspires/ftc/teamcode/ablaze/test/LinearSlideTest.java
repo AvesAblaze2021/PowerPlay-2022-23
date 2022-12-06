@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ablaze.autonomous;
+package org.firstinspires.ftc.teamcode.ablaze.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -6,20 +6,23 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
-import java.util.Math;
+import com.qualcomm.robotcore.util.ElapsedTime;
+//import java.util.Math;
 
 @Autonomous
 public class LinearSlideTest extends LinearOpMode{
   AblazeRobot robot = new AblazeRobot();
   int lastPos = 0; //Used for encoder algorithm
   double motorPower = 0.2;
+  ElapsedTime runtime = new ElapsedTime();
   
   @Override
   public void runOpMode(){
-    robot.initalize(hardwareMap);
+    robot.initialize(hardwareMap);
     DcMotor horizontal = robot.getHorizontalSlideMotor();
     DcMotor vertical = robot.getVerticalSlideMotor();
-    moveSlideEncoder(vertical, 200, 500); //timeout in MS
+    //moveSlideEncoder(vertical, 200, 500); //timeout in MS
+    moveSlideTime(vertical, motorPower, 1000);
   }
   
   //Regular timed algorithm
@@ -44,7 +47,7 @@ public class LinearSlideTest extends LinearOpMode{
     slideMotor.setPower(0.2);
     
     //Encoder loop
-    runtime.reset()
+    runtime.reset();
     while(opModeIsActive() && runtime.milliseconds() < timeout && slideMotor.isBusy()){
       continue;
     }

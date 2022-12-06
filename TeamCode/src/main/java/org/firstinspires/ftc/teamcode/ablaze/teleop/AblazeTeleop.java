@@ -75,6 +75,7 @@ public class AblazeTeleop extends OpMode{
         //Check all states
         switch(attachState){
             case START: //Initial state - all gamepad conditionals go here, leads to other States
+
                 if(gamepad2.a){
                     attachState = AttachmentState.OPEN;
                 }
@@ -113,6 +114,7 @@ public class AblazeTeleop extends OpMode{
 
         //State machine doesn't interfere with drivetrain code here
         driveWithTwoJoysticks();
+        linearSlides();
     }
 
     /*
@@ -154,8 +156,27 @@ public class AblazeTeleop extends OpMode{
 
         //sets the speed of the drive motors
         practiceRobot.getLeftBackDrive().setPower(p1);
+        telemetry.addData("motor power of left back motor is", p1);
         practiceRobot.getLeftFrontDrive().setPower(p2);
+        telemetry.addData("motor power of left front motor is", p2);
         practiceRobot.getRightFrontDrive().setPower(p3);
+        telemetry.addData("motor power of Right front motor is", p3);
         practiceRobot.getRightBackDrive().setPower(p4);
+        telemetry.addData("motor power of Right back motor is", p4);
+    }
+    public void linearSlides(){
+        double rt = gamepad1.right_trigger;
+        double lt = gamepad1.left_trigger;
+        double bumperValue = 0;
+        double triggerValue = rt - lt;
+        if(gamepad1.right_bumper){
+            bumperValue += 1;
+        }
+        if (gamepad1.left_bumper){
+            bumperValue -= 1;
+        }
+
+        AblazeRobot.getVerticalSlideMotor().setPower(triggerValue);
+        AblazeRobot.getHorizontalSlideMotor().setPower(bumperValue);
     }
 }

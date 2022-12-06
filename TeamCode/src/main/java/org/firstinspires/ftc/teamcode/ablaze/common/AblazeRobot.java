@@ -14,8 +14,8 @@ public class AblazeRobot {
     private DcMotor leftFrontDrive = null;
     private DcMotor rightBackDrive = null;
     private DcMotor rightFrontDrive = null;
-    private DcMotor horizontalSlideMotor = null;
-    private DcMotor verticalSlideMotor = null;
+    private static DcMotor horizontalSlideMotor = null;
+    private static DcMotor verticalSlideMotor = null;
     private WebcamName webCam;
     private BNO055IMU  imu;
 
@@ -26,16 +26,16 @@ public class AblazeRobot {
         rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontMotor"); // Port: 1
         rightBackDrive = hwMap.get(DcMotor.class, "rightBackMotor"); // Port: 2
         leftBackDrive = hwMap.get(DcMotor.class, "leftBackMotor"); // Port: 3
-        horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalMotor");
-        verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalMotor");
+        horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalMotor");//Port X0
+        verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalMotor");//Port X1
 
         imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
         webCam = hwMap.get(WebcamName.class, "VuforiaCam"); // Port: 3
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         horizontalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
         verticalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
     }
@@ -58,9 +58,9 @@ public class AblazeRobot {
 
     public DcMotor getRightFrontDrive() { return rightFrontDrive; }
 
-    public DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
+    public static DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
 
-    public DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
+    public static DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
 
     public double getDefaultPower() {
         return defaultPower;
