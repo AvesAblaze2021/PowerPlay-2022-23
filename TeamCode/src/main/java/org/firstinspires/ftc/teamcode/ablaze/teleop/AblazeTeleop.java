@@ -14,15 +14,15 @@ public class AblazeTeleop extends OpMode{
     ElapsedTime runtime = new ElapsedTime();
 
     private boolean isLoop = false;
+    private int level = 0; //0 = Start, 1 = Ground, 2 = Medium, 3 = High
+    private const int[] level_ticks = {0, 0, 0, 0}; //Tick values for every level
+    private DcMotor verticalSlideMotor;
 
     //All possible States for all Attachments - change for Power Play
     private enum AttachmentState{
         START, //Initial State - gamepad monitoring occurs here
-        CHECK, //Arm
-        OPEN, //Arm Claw
-        CLOSE, //Arm Claw
-        ACTIVATE, //Carousel
-        DEACTIVATE //Carousel
+        UP, //Moves linear slide up one level
+        DOWN //Moves linear slide down one level
     };
 
     private AttachmentState attachState = AttachmentState.START;
@@ -41,9 +41,9 @@ public class AblazeTeleop extends OpMode{
         // Initialize Robot
         practiceRobot.initialize(hardwareMap);
 
-        // Use Encoder for Arm
-
-        // Do not Use Encoder for Wheels
+        //Stop and reset vertical slide encoder
+        verticalSlideMotor = practiceRobot.getVerticalSlideMotor();
+        verticalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Initialized");
@@ -75,46 +75,37 @@ public class AblazeTeleop extends OpMode{
         //Check all states
         switch(attachState){
             case START: //Initial state - all gamepad conditionals go here, leads to other States
-
-                if(gamepad2.a){
-                    attachState = AttachmentState.OPEN;
-                }
-                if(gamepad2.b){
-                    attachState = AttachmentState.CLOSE;
-                }
-                if(gamepad2.x){
-                    attachState = AttachmentState.ACTIVATE;
-                }
                 if(gamepad2.y){
-                    attachState = AttachmentState.DEACTIVATE;
+                    attachState = AttachmentState.UP;
+                }
+                if(gamepad2.a){
+                    attachState = AttachmentState.DOWN;
                 }
                 break;
 
-            case CHECK: //Check if Arm has either reached target or if timeout has been reached
-                        //Similar to while loop used in autonomous
+            case UP: //State for moving arm up one level
+                level += 1;
+                moveLinearSlides();
+                if(level > 4){
+                    level = 0;
+                }
                 attachState = AttachmentState.START;
                 break;
 
-            case OPEN:
-                attachState = AttachmentState.START;
-                break;
-
-            case CLOSE:
-                attachState = AttachmentState.START;
-                break;
-
-            case ACTIVATE:
-                attachState = AttachmentState.START;
-                break;
-
-            case DEACTIVATE:
+            case DOWN: //State for moving arm down one level
+                if(level < 0) {
+                    break;
+                }
+                else {
+                    level -= 1;
+                    moveLinearSlides();
+                }
                 attachState = AttachmentState.START;
                 break;
         }
 
         //State machine doesn't interfere with drivetrain code here
         driveWithTwoJoysticks();
-        linearSlides();
     }
 
     /*
@@ -125,7 +116,7 @@ public class AblazeTeleop extends OpMode{
         isLoop = false;
     }
 
-    // drive with joysticks
+    // drive with joysticks - WIP
     public void driveWithTwoJoysticks() {
         double px = gamepad1.left_stick_x;
         double py = -gamepad1.left_stick_y;
@@ -164,19 +155,19 @@ public class AblazeTeleop extends OpMode{
         practiceRobot.getRightBackDrive().setPower(p4);
         telemetry.addData("motor power of Right back motor is", p4);
     }
-    public void linearSlides(){
-        double rt = gamepad1.right_trigger;
-        double lt = gamepad1.left_trigger;
-        double bumperValue = 0;
-        double triggerValue = rt - lt;
-        if(gamepad1.right_bumper){
-            bumperValue += 1;
-        }
-        if (gamepad1.left_bumper){
-            bumperValue -= 1;
-        }
 
-        AblazeRobot.getVerticalSlideMotor().setPower(triggerValue);
-        AblazeRobot.getHorizontalSlideMotor().setPower(bumperValue);
+    public void moveLinearSlides(){
+        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        verticalSlideMotor.setTargetPosition(level_ticks[level]);
+        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlideMotor.setPower(Math.abs(speed));
+        while (opModeIsActive() && verticalSlideMotor.isBusy()) {
+            telemetry.addData("LFT, RFT", "Running to %7d", level_ticks[level]);
+            telemetry.addData("LFP, RFP", "Running at %7d",
+                    verticalSlideMotor.getCurrentPosition()
+            );
+            telemetry.update();
+        }
+        verticalSlideMotor.setPower(0.0);
     }
 }

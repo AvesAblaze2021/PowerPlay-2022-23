@@ -21,7 +21,15 @@ public class LinearSlideTest extends LinearOpMode{
     robot.initialize(hardwareMap);
     DcMotor horizontal = robot.getHorizontalSlideMotor();
     DcMotor vertical = robot.getVerticalSlideMotor();
-    //moveSlideEncoder(vertical, 200, 500); //timeout in MS
+
+    //Use these statements ONLY when testing moveSlideEncoderAbs
+    //vertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    //horizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    waitForStart();
+
+    runtime.reset();
+    //moveSlideEncoderRel(vertical, 200, 500); //timeout in MS
     moveSlideTime(vertical, motorPower, 1000);
   }
   
@@ -34,7 +42,7 @@ public class LinearSlideTest extends LinearOpMode{
   }
   
   //Option 2 algorithm described in pseudocode - see drive
-  public void moveSlideEncoder(DcMotor slideMotor, int ticks, int timeout){
+  public void moveSlideEncoderRel(DcMotor slideMotor, int ticks, int timeout){
     //Encoder setup - adjust tick value w/ last pos
     int newTicks = Math.abs(ticks - lastPos);
     slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -56,6 +64,21 @@ public class LinearSlideTest extends LinearOpMode{
     slideMotor.setPower(0);
     lastPos = slideMotor.getCurrentPosition();
     slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+  }
+
+  public void moveSlideEncoderAbs(DcMotor slideMotor, int ticks, int timeout){
+    slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    slideMotor.setTargetPosition(ticks);
+    slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    slideMotor.setPower(Math.abs(speed));
+    while (opModeIsActive() && slideMotor.isBusy() && runtime.milliseconds() < timeout) {
+      telemetry.addData("LFT, RFT", "Running to %7d", ticks);
+      telemetry.addData("LFP, RFP", "Running at %7d",
+              verticalSlideMotor.getCurrentPosition()
+      );
+      telemetry.update();
+    }
+    slideMotor.setPower(0.0);
   }
     
 }

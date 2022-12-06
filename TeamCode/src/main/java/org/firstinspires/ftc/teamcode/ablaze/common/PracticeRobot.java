@@ -25,14 +25,21 @@ public class PracticeRobot
       rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontMotor"); // Port: 1
       rightBackDrive = hwMap.get(DcMotor.class, "rightBackMotor"); // Port: 2
       leftBackDrive = hwMap.get(DcMotor.class, "leftBackMotor"); // Port: 3
+      horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalSlideMotor");//Port TBD
+      verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalSlideMotor");//Port TBD
       
       imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
-      //webCam = hwMap.get(WebcamName.class, "VuforiaCam"); // Port: 3
       
       leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
       rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
       rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
       leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+      horizontalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+      verticalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+
+      horizontalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+      verticalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     
     public DcMotor getLeftBackDrive() {
@@ -50,10 +57,10 @@ public class PracticeRobot
     public DcMotor getRightFrontDrive() {
         return rightFrontDrive;
     }
-    
-    //public WebcamName getWebCam() {
-        //return webCam;
-    //}
+
+    public static DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
+
+    public static DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
     
     public double getDefaultPower(){
         return defaultPower;

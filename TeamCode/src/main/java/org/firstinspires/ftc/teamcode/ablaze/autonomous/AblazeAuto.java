@@ -13,35 +13,37 @@ public class AblazeAuto extends LinearOpMode {
     AblazeRobot robot = new AblazeRobot();
 
     //AblazeTFOD..java tfod = new AblazeTFOD..java();
-private DcMotor verticalSlideMotor = null;
+    private DcMotor verticalSlideMotor;
+    private ElapsedTime runtime = new ElapsedTime();
     String location = "A1";
 
     @Override
     public void runOpMode() {
         robot.initialize(hardwareMap);
-        verticalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalSlideMotor = robot.getVerticalSlideMotor();
         stopAndResetEncoder();
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
+        runtime.reset();
         telemetry.addData("Mode", "running");
         telemetry.update();
         runToTicks(.8, 300);
     }
-    private void runToTicks(double speed, int ticks) {
+
+    private void runToTicks(double speed, int ticks, int timeout) {
         runUsingEncoder();
         verticalSlideMotor.setTargetPosition(ticks);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         verticalSlideMotor.setPower(Math.abs(speed));
-        while (opModeIsActive() && verticalSlideMotor.isBusy()) {
+        while (opModeIsActive() && verticalSlideMotor.isBusy() && runtime.milliseconds() < timeout) {
             telemetry.addData("LFT, RFT", "Running to %7d", ticks);
             telemetry.addData("LFP, RFP", "Running at %7d",
                     verticalSlideMotor.getCurrentPosition()
             );
             telemetry.update();
-            verticalSlideMotor.setPower(0.0);
         }
-
+        verticalSlideMotor.setPower(0.0);
     }
 
 

@@ -26,8 +26,8 @@ public class AblazeRobot {
         rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontMotor"); // Port: 1
         rightBackDrive = hwMap.get(DcMotor.class, "rightBackMotor"); // Port: 2
         leftBackDrive = hwMap.get(DcMotor.class, "leftBackMotor"); // Port: 3
-        horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalMotor");//Port X0
-        verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalMotor");//Port X1
+        horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalSlideMotor");//Port X0
+        verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalSlideMotor");//Port X1
 
         imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
         webCam = hwMap.get(WebcamName.class, "VuforiaCam"); // Port: 3
@@ -36,8 +36,12 @@ public class AblazeRobot {
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
         horizontalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
         verticalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        horizontalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public WebcamName getWebCam() {
