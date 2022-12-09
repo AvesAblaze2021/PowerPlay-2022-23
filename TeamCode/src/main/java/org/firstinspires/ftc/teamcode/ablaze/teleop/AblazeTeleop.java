@@ -15,8 +15,9 @@ public class AblazeTeleop extends OpMode{
 
     private boolean isLoop = false;
     private int level = 0; //0 = Start, 1 = Ground, 2 = Medium, 3 = High
-    private const int[] level_ticks = {0, 0, 0, 0}; //Tick values for every level
+    private final int[] level_ticks = {0, 0, 0, 0}; //Tick values for every level
     private DcMotor verticalSlideMotor;
+    private final double motorPower = 0.3;
 
     //All possible States for all Attachments - change for Power Play
     private enum AttachmentState{
@@ -122,9 +123,9 @@ public class AblazeTeleop extends OpMode{
         double py = -gamepad1.left_stick_y;
         double pa = (gamepad1.right_stick_x - gamepad1.right_stick_y);
         if (Math.abs(pa) < 0.03) pa = 0;
-        double p1 = -px + py + pa;
+        double p1 = px + py + pa;
         double p2 = px + py + pa;
-        double p3 = -px + py - pa;
+        double p3 = px + py - pa;
         double p4 = px + py - pa;
         if(gamepad1.left_bumper) {
             p1 /= 3;
@@ -160,8 +161,8 @@ public class AblazeTeleop extends OpMode{
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         verticalSlideMotor.setTargetPosition(level_ticks[level]);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlideMotor.setPower(Math.abs(speed));
-        while (opModeIsActive() && verticalSlideMotor.isBusy()) {
+        verticalSlideMotor.setPower(motorPower);
+        while (isLoop && verticalSlideMotor.isBusy()) {
             telemetry.addData("LFT, RFT", "Running to %7d", level_ticks[level]);
             telemetry.addData("LFP, RFP", "Running at %7d",
                     verticalSlideMotor.getCurrentPosition()

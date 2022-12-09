@@ -16,6 +16,8 @@ public class PracticeRobot
     private DcMotor rightBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private WebcamName webCam;
+    private DcMotor horizontalSlideMotor;
+    private DcMotor verticalSlideMotor;
 
     private double defaultPower = 0.5;
     private BNO055IMU imu;
@@ -25,8 +27,8 @@ public class PracticeRobot
       rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontMotor"); // Port: 1
       rightBackDrive = hwMap.get(DcMotor.class, "rightBackMotor"); // Port: 2
       leftBackDrive = hwMap.get(DcMotor.class, "leftBackMotor"); // Port: 3
-      horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalSlideMotor");//Port TBD
-      verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalSlideMotor");//Port TBD
+      horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalSlideMotor");//Port X0
+      verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalSlideMotor");//Port X1
       
       imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
       
@@ -58,9 +60,9 @@ public class PracticeRobot
         return rightFrontDrive;
     }
 
-    public static DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
+    public DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
 
-    public static DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
+    public DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
     
     public double getDefaultPower(){
         return defaultPower;

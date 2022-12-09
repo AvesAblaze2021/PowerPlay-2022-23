@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
@@ -28,7 +30,7 @@ public class AblazeAuto extends LinearOpMode {
         runtime.reset();
         telemetry.addData("Mode", "running");
         telemetry.update();
-        runToTicks(.8, 300);
+        runToTicks(.8, 300, 3000);
     }
 
     private void runToTicks(double speed, int ticks, int timeout) {

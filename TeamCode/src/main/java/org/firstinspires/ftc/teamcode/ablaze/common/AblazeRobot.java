@@ -22,30 +22,30 @@ public class AblazeRobot {
     private double defaultPower = 0;
 
     public void initialize(HardwareMap hwMap) {
-        leftFrontDrive = hwMap.get(DcMotor.class, "leftFrontMotor"); // Port: 0
+        //leftFrontDrive = hwMap.get(DcMotor.class, "leftFrontMotor"); // Port: 0
         rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontMotor"); // Port: 1
         rightBackDrive = hwMap.get(DcMotor.class, "rightBackMotor"); // Port: 2
         leftBackDrive = hwMap.get(DcMotor.class, "leftBackMotor"); // Port: 3
-        horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalSlideMotor");//Port X0
+        //horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalSlideMotor");//Port X0
         verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalSlideMotor");//Port X1
 
         imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
-        webCam = hwMap.get(WebcamName.class, "VuforiaCam"); // Port: 3
+        //webCam = hwMap.get(WebcamName.class, "VuforiaCam"); // Port: 3
 
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        //leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        horizontalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-        verticalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        //horizontalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        verticalSlideMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        horizontalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //horizontalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         verticalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public WebcamName getWebCam() {
-        return webCam;
+    public void getWebCam() {
+        //return webCam;
     }
 
     public DcMotor getLeftBackDrive() {
@@ -53,7 +53,7 @@ public class AblazeRobot {
     }
 
     public DcMotor getLeftFrontDrive() {
-        return leftFrontDrive;
+        return verticalSlideMotor;
     }
 
     public DcMotor getRightBackDrive() {
@@ -62,9 +62,9 @@ public class AblazeRobot {
 
     public DcMotor getRightFrontDrive() { return rightFrontDrive; }
 
-    public static DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
+    public  DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
 
-    public static DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
+    public  DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
 
     public double getDefaultPower() {
         return defaultPower;
@@ -76,14 +76,14 @@ public class AblazeRobot {
 
     public void driveTime(double power) {
         leftBackDrive.setPower(power);
-        leftFrontDrive.setPower(power);
+        //leftFrontDrive.setPower(power);
         rightBackDrive.setPower(power);
         rightFrontDrive.setPower(power);
     }
 
     public void stop() {
         leftBackDrive.setPower(0);
-        leftFrontDrive.setPower(0);
+        //leftFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
     }
