@@ -32,10 +32,10 @@ public class PracticeRobot
       
       imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
       
-      leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+      leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
       rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
       rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-      leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+      leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
       //horizontalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
       //verticalSlideMotor.setDirection(DcMotor.Direction.FORWARD);

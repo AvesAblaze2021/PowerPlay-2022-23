@@ -63,43 +63,43 @@ public class TeleopDriveTest extends OpMode {
 
     // drive with joysticks
     public void driveWithTwoJoysticks() {
-        double px = gamepad1.left_stick_x;
-        double py = -gamepad1.left_stick_y;
-        double pa = (gamepad1.right_stick_x - gamepad1.right_stick_y);
-        if (Math.abs(pa) < 0.03) pa = 0;
-        double p1 = -px + py + pa;
-        double p2 = px + py + pa;
-        double p3 = -px + py - pa;
-        double p4 = px + py - pa;
+        double drivingPower = gamepad1.left_stick_y;
+        double turningPower = gamepad1.right_stick_x;
+        double strafing = gamepad1.left_stick_x;
+        if (Math.abs(strafing) < 0.03) strafing = 0;
+        double leftBackPower = drivingPower - turningPower + strafing;
+        double leftFrontPower = drivingPower - turningPower - strafing;
+        double rightFrontPower = drivingPower + turningPower + strafing;
+        double rightBackPower = drivingPower + turningPower - strafing;
         if(gamepad1.left_bumper) {
-            p1 /= 3;
-            p2 /= 3;
-            p3 /= 3;
-            p4 /= 3;
+            leftBackPower /= 3;
+            leftFrontPower /= 3;
+            rightFrontPower /= 3;
+            rightBackPower /= 3;
         }
         else if(gamepad1.right_bumper) {
-            p1 /= 1.2;
-            p2 /= 1.2;
-            p3 /= 1.2;
-            p4 /= 1.2;
+            leftBackPower /= 1.2;
+            leftFrontPower /= 1.2;
+            rightFrontPower /= 1.2;
+            rightBackPower /= 1.2;
         }
         else if (isLoop){
-            p1 /= 1.6;
-            p2 /= 1.6;
-            p3 /= 1.6;
-            p4 /= 1.6;
+            leftBackPower /= 1.6;
+            leftFrontPower /= 1.6;
+            rightFrontPower /= 1.6;
+            rightBackPower /= 1.6;
         }
         else{
-            p1 /= 1.6;
-            p2 /= 1.6;
-            p3 /= 1.6;
-            p4 /= 1.6;
+            leftBackPower /= 1.6;
+            leftFrontPower /= 1.6;
+            rightFrontPower /= 1.6;
+            rightBackPower /= 1.6;
         }
 
         //sets the speed of the drive motors
-        robot.getLeftBackDrive().setPower(p1);
-        robot.getLeftFrontDrive().setPower(p2);
-        robot.getRightFrontDrive().setPower(p3);
-        robot.getRightBackDrive().setPower(p4);
+        robot.getLeftBackDrive().setPower(leftBackPower);
+        robot.getLeftFrontDrive().setPower(leftFrontPower);
+        robot.getRightFrontDrive().setPower(rightFrontPower);
+        robot.getRightBackDrive().setPower(rightBackPower);
     }
 }
