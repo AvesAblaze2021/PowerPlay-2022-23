@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
 @TeleOp
 public class TeleopDriveTest extends OpMode {
     PracticeRobot robot = new PracticeRobot();
-    //boolean isLoop = true;
+    boolean isLoop = false;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -49,6 +49,7 @@ public class TeleopDriveTest extends OpMode {
      */
     @Override
     public void loop(){
+        isLoop = true;
         driveWithTwoJoysticks();
     }
 
@@ -57,7 +58,7 @@ public class TeleopDriveTest extends OpMode {
      */
     @Override
     public void stop() {
-
+        isLoop = false;
     }
 
     // drive with joysticks
@@ -82,15 +83,12 @@ public class TeleopDriveTest extends OpMode {
             p3 /= 1.2;
             p4 /= 1.2;
         }
-        /*
-        Restore if else statement doesn't work
         else if (isLoop){
             p1 /= 1.6;
             p2 /= 1.6;
             p3 /= 1.6;
             p4 /= 1.6;
         }
-         */
         else{
             p1 /= 1.6;
             p2 /= 1.6;

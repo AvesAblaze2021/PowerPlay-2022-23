@@ -23,22 +23,21 @@ public class AblazeAuto extends LinearOpMode {
     public void runOpMode() {
         robot.initialize(hardwareMap);
         verticalSlideMotor = robot.getVerticalSlideMotor();
-        stopAndResetEncoder();
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
         runtime.reset();
         telemetry.addData("Mode", "running");
         telemetry.update();
-        runToTicks(.8, 300, 3000);
+        runToTicks(.2, 300);
     }
 
-    private void runToTicks(double speed, int ticks, int timeout) {
+    private void runToTicks(double speed, int ticks) {
         runUsingEncoder();
         verticalSlideMotor.setTargetPosition(ticks);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         verticalSlideMotor.setPower(Math.abs(speed));
-        while (opModeIsActive() && verticalSlideMotor.isBusy() && runtime.milliseconds() < timeout) {
+        while (opModeIsActive() && verticalSlideMotor.isBusy()) {
             telemetry.addData("LFT, RFT", "Running to %7d", ticks);
             telemetry.addData("LFP, RFP", "Running at %7d",
                     verticalSlideMotor.getCurrentPosition()
@@ -46,11 +45,6 @@ public class AblazeAuto extends LinearOpMode {
             telemetry.update();
         }
         verticalSlideMotor.setPower(0.0);
-    }
-
-
-    private void stopAndResetEncoder() {
-        verticalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     private void runUsingEncoder() {

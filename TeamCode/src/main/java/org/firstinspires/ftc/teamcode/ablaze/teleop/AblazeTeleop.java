@@ -4,26 +4,30 @@ package org.firstinspires.ftc.teamcode.ablaze.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
 @TeleOp(name="AblazeTeleop", group="AblazeRobot")
 public class AblazeTeleop extends OpMode{
-    PracticeRobot practiceRobot = new PracticeRobot();
+    AblazeRobot robot = new AblazeRobot();
     ElapsedTime runtime = new ElapsedTime();
 
     private boolean isLoop = false;
     private int level = 0; //0 = Start, 1 = Ground, 2 = Medium, 3 = High
-    private final int[] level_ticks = {0, 0, 0, 0}; //Tick values for every level
+    private final int[] level_ticks = {0, 100, 200, 300}; //Tick values for every level
     private DcMotor verticalSlideMotor;
+    private Servo rotationServo;
     private final double motorPower = 0.3;
 
     //All possible States for all Attachments - change for Power Play
     private enum AttachmentState{
         START, //Initial State - gamepad monitoring occurs here
         UP, //Moves linear slide up one level
-        DOWN //Moves linear slide down one level
+        DOWN, //Moves linear slide down one level
+        LEFT, //Rotates arm left
+        RIGHT //Rotates arm right
     };
 
     private AttachmentState attachState = AttachmentState.START;
@@ -40,11 +44,13 @@ public class AblazeTeleop extends OpMode{
         telemetry.update();
 
         // Initialize Robot
-        practiceRobot.initialize(hardwareMap);
+        robot.initialize(hardwareMap);
 
         //Stop and reset vertical slide encoder
-        verticalSlideMotor = practiceRobot.getVerticalSlideMotor();
-        verticalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlideMotor = robot.getVerticalSlideMotor();
+        rotationServo = robot.getRotationServo();
+        rotationServo.setDirection(Servo.Direction.FORWARD);
+        rotationServo.setPosition(0.0);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Initialized");
@@ -82,25 +88,36 @@ public class AblazeTeleop extends OpMode{
                 if(gamepad2.a){
                     attachState = AttachmentState.DOWN;
                 }
+                if(gamepad2.x){
+                    telemetry.addData("button", "x");
+                    telemetry.update();
+                    attachState = AttachmentState.LEFT;
+                }
+                if(gamepad2.b){
+                    attachState = AttachmentState.RIGHT;
+                }
                 break;
 
             case UP: //State for moving arm up one level
-                level += 1;
-                moveLinearSlides();
-                if(level > 4){
-                    level = 0;
+                if(level < 3){
+                    level += 1;
+                    moveLinearSlides();
                 }
                 attachState = AttachmentState.START;
                 break;
 
             case DOWN: //State for moving arm down one level
-                if(level < 0) {
-                    break;
-                }
-                else {
+                if(level > 0){
                     level -= 1;
                     moveLinearSlides();
                 }
+                attachState = AttachmentState.START;
+                break;
+
+            case LEFT:
+                rotationServo.setPosition(-0.5);
+                telemetry.addData("rotationServo", "moved");
+                telemetry.update();
                 attachState = AttachmentState.START;
                 break;
         }
@@ -147,13 +164,13 @@ public class AblazeTeleop extends OpMode{
         }
 
         //sets the speed of the drive motors
-        practiceRobot.getLeftBackDrive().setPower(p1);
+        robot.getLeftBackDrive().setPower(p1);
         telemetry.addData("motor power of left back motor is", p1);
-        practiceRobot.getLeftFrontDrive().setPower(p2);
+        //robot.getLeftFrontDrive().setPower(p2);
         telemetry.addData("motor power of left front motor is", p2);
-        practiceRobot.getRightFrontDrive().setPower(p3);
+        //robot.getRightFrontDrive().setPower(p3);
         telemetry.addData("motor power of Right front motor is", p3);
-        practiceRobot.getRightBackDrive().setPower(p4);
+        robot.getRightBackDrive().setPower(p4);
         telemetry.addData("motor power of Right back motor is", p4);
     }
 
@@ -167,6 +184,7 @@ public class AblazeTeleop extends OpMode{
             telemetry.addData("LFP, RFP", "Running at %7d",
                     verticalSlideMotor.getCurrentPosition()
             );
+            telemetry.addData("level", level);
             telemetry.update();
         }
         verticalSlideMotor.setPower(0.0);
