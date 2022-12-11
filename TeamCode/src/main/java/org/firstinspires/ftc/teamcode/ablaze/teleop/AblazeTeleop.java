@@ -119,7 +119,10 @@ public class AblazeTeleop extends OpMode{
                 telemetry.addData("rotationServo", "moved");
                 telemetry.update();
                 attachState = AttachmentState.START;
-                break;
+
+            case RIGHT:
+                rotationServo.setPosition(0.5);
+                attachState = AttachmentState.START;
         }
 
         //State machine doesn't interfere with drivetrain code here

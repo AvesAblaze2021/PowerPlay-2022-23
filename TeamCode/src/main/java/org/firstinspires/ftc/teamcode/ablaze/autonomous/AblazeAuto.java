@@ -29,11 +29,11 @@ public class AblazeAuto extends LinearOpMode {
         runtime.reset();
         telemetry.addData("Mode", "running");
         telemetry.update();
-        runToTicks(.2, 300);
+        moveLinearSlides(.2, 300);
     }
 
-    private void runToTicks(double speed, int ticks) {
-        runUsingEncoder();
+    private void moveLinearSlides(double speed, int ticks) {
+        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         verticalSlideMotor.setTargetPosition(ticks);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         verticalSlideMotor.setPower(Math.abs(speed));
@@ -45,10 +45,6 @@ public class AblazeAuto extends LinearOpMode {
             telemetry.update();
         }
         verticalSlideMotor.setPower(0.0);
-    }
-
-    private void runUsingEncoder() {
-        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
 
