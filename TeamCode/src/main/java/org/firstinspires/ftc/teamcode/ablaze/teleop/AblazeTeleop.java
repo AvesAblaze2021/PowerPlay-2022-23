@@ -16,7 +16,7 @@ public class AblazeTeleop extends OpMode{
 
     private boolean isLoop = false;
     private int level = 0; //0 = Start, 1 = Ground, 2 = Medium, 3 = High
-    private final int[] level_ticks = {0, 100, 200, 300}; //Tick values for every level
+    private final int[] level_ticks = {0, 500, 1000, 1500, 1700}; //Tick values for every level
     private DcMotor verticalSlideMotor;
     private Servo rotationServo;
     private final double motorPower = 0.3;
@@ -99,7 +99,7 @@ public class AblazeTeleop extends OpMode{
                 break;
 
             case UP: //State for moving arm up one level
-                if(level < 3){
+                if(level < level_ticks.length - 1){
                     level += 1;
                     moveLinearSlides();
                 }
