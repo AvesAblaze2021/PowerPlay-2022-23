@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.FreightFrenzy202122.ablaze.common.AblazeRo
 import java.util.List;
 
 public class AblazeTFOD {
-    private static final String TFOD_MODEL_ASSET = "model_20221105_090531.tflite";
+    private static final String TFOD_MODEL_ASSET = "model_20221128_154930.tflite";
     private static final String[] LABELS = {
             "Fire",
             "Plane",
@@ -45,8 +45,13 @@ public class AblazeTFOD {
             List<Recognition> recognitions = tfod.getRecognitions();
             if (recognitions != null) {
                 for(Recognition recognition : recognitions) {
-                    if ( recognition.getLabel().equals("Ball") || recognition.getLabel().equals("Cube"))
-                    {
+                    if(recognition.getLabel().equals("Fire")) {
+                        element = recognition;
+                        return;
+                    } else if(recognition.getLabel().equals("Plane")) {
+                        element = recognition;
+                        return;
+                    } else {
                         element = recognition;
                         return;
                     }
