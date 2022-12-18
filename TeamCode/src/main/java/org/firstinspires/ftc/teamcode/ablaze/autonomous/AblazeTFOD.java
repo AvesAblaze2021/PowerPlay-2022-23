@@ -1,5 +1,5 @@
-/*
-package org.firstinspires.ftc.teamcode.FreightFrenzy202122.ablaze.autonomous;
+
+package org.firstinspires.ftc.teamcode.ablaze.autonomous;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.teamcode.FreightFrenzy202122.ablaze.common.AblazeRobot;
+import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 
 import java.util.List;
 
@@ -87,5 +87,15 @@ public class AblazeTFOD {
             tfod.setZoom(1.9, 16.0/9.0);
         }
     }
+
+    public int time() {
+        if(element.equals("Fire")) {
+            return 100;
+        } else if(element.equals("Plane")) {
+            return 200;
+        } else {
+            return 300;
+        }
+    }
 }
-*/
+
