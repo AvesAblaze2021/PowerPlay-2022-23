@@ -30,7 +30,7 @@ public class PracticeRobot
       //horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalSlideMotor");//Port X0
       //verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalSlideMotor");//Port X1
       
-      imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
+      //imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
       
       leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
       rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);

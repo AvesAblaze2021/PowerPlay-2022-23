@@ -98,8 +98,13 @@ public class TeleopDriveTest extends OpMode {
 
         //sets the speed of the drive motors
         robot.getLeftBackDrive().setPower(leftBackPower);
+        telemetry.addData(".","the power of the left back motor is" + leftBackPower);
         robot.getLeftFrontDrive().setPower(leftFrontPower);
+        telemetry.addData(".","the power of the left back motor is" + leftFrontPower);
         robot.getRightFrontDrive().setPower(rightFrontPower);
+        telemetry.addData(".","the power of the left back motor is" + rightFrontPower);
         robot.getRightBackDrive().setPower(rightBackPower);
+        telemetry.addData(".","the power of the left back motor is" + rightBackPower);
+        telemetry.update();
     }
 }

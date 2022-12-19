@@ -7,11 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
-@TeleOp(name="AblazeTeleop", group="AblazeRobot")
+@TeleOp(name="AblazeTeleop")
 public class AblazeTeleop extends OpMode{
-    AblazeRobot robot = new AblazeRobot();
+    PracticeRobot robot = new PracticeRobot();
     ElapsedTime runtime = new ElapsedTime();
 
     private boolean isLoop = false;
@@ -47,10 +46,10 @@ public class AblazeTeleop extends OpMode{
         robot.initialize(hardwareMap);
 
         //Stop and reset vertical slide encoder
-        verticalSlideMotor = robot.getVerticalSlideMotor();
-        rotationServo = robot.getRotationServo();
-        rotationServo.setDirection(Servo.Direction.FORWARD);
-        rotationServo.setPosition(0.0);
+        verticalSlideMotor = null;
+        rotationServo = null;
+        //rotationServo.setDirection(Servo.Direction.FORWARD);
+        //rotationServo.setPosition(0.0);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Initialized");
