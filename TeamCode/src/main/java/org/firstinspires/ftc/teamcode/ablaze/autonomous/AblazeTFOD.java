@@ -1,5 +1,6 @@
-
 package org.firstinspires.ftc.teamcode.ablaze.autonomous;
+import android.sax.Element;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -15,8 +16,8 @@ import java.util.List;
 public class AblazeTFOD {
     private static final String TFOD_MODEL_ASSET = "model_20221128_154930.tflite";
     private static final String[] LABELS = {
-            "Fire",
             "Plane",
+            "Fire",
             "Jacket"
     };
 
@@ -37,29 +38,31 @@ public class AblazeTFOD {
 
     VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-    public void detectElement() {
+
+
+    public int detectElement() {
         // Comment out multiple try... just trying only once
         // Keep trying until an object is detected or time is expired
         //runtime.reset();
         //while (runtime.milliseconds() < timeout) {
-            List<Recognition> recognitions = tfod.getRecognitions();
-            if (recognitions != null) {
-                for(Recognition recognition : recognitions) {
-                    if(recognition.getLabel().equals("Fire")) {
-                        element = recognition;
-                        return;
-                    } else if(recognition.getLabel().equals("Plane")) {
-                        element = recognition;
-                        return;
-                    } else {
-                        element = recognition;
-                        return;
-                    }
+        List<Recognition> recognitions = tfod.getRecognitions();
+        if (recognitions != null) {
+            for (Recognition recognition : recognitions) {
+                if (recognition.getLabel().equals("Plane")) {
+                    element = recognition;
+                    return 1;
+                } else if (recognition.getLabel().equals("Fire")) {
+                    element = recognition;
+                    return 2;
+                } else if (recognition.getLabel().equals("Jacket")) {
+                    element = recognition;
+                    return 3;
                 }
             }
+        }
         //}
+        return -1;
     }
-
     private void initializeVuforia(){
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraName = ablazeRobot.getWebCam();
@@ -71,7 +74,7 @@ public class AblazeTFOD {
         int tfodMonitorViewId = hwMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hwMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.80f;
+        tfodParameters.minResultConfidence = 0.70f;
         tfodParameters.inputSize = 320;
         tfodParameters.isModelTensorFlow2 = true;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
@@ -84,18 +87,11 @@ public class AblazeTFOD {
         initializeTfod(hwMap);
         if(tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.9, 16.0/9.0);
+            tfod.setZoom(1.0, 16.0/9.0);
         }
     }
 
-    public int time() {
-        if(element.equals("Fire")) {
-            return 100;
-        } else if(element.equals("Plane")) {
-            return 200;
-        } else {
-            return 300;
-        }
-    }
+
+
 }
 

@@ -6,28 +6,31 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
+import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 import org.firstinspires.ftc.teamcode.ablaze.teleop.AblazeTeleop;
 
 //Teleop test program for testing attachments
 @TeleOp
 public class TeleopAttachTest extends OpMode {
-    PracticeRobot robot = new PracticeRobot();
+    AblazeRobot robot = new AblazeRobot();
 
     private boolean isLoop = false;
-    private int level = 0; //0 = Start, 1 = Ground, 2 = Medium, 3 = High
-    private final int[] vertical_level_ticks = {0, 500, 1000, 1500, 1700}; //Tick values for every level
-    private final int[] horizontal_level_ticks = {0, 1000};
+    private final int[] vertical_level_ticks = {200, 1200, 2300, 3500}; //Tick values for every level
     private DcMotor verticalSlideMotor;
     private Servo rotationServo;
+    private Servo scissorServo;
+    private Servo alignServo;
     private final double motorPower = 0.3;
+    int vertical_level = 0;
 
     private enum AttachmentState{
         START, //Initial State - gamepad monitoring occurs here
         UP, //Moves linear slide up one level
         DOWN, //Moves linear slide down one level
         LEFT, //Rotates arm left
-        RIGHT //Rotates arm right
+        RIGHT, //Rotates arm right
+        PICKUP, //AUTOMATED: Picks up cone completely
+        DROP //Move scissors right (from servo perspective)
     };
 
     private AttachmentState attachState = AttachmentState.START;
@@ -43,6 +46,20 @@ public class TeleopAttachTest extends OpMode {
 
         // Initialize Robot
         robot.initialize(hardwareMap);
+        verticalSlideMotor = robot.getVerticalSlideMotor();
+        rotationServo = robot.getRotationServo();
+        scissorServo = robot.getScissorServo();
+        alignServo = robot.getAlignServo();
+
+        moveLinearSlides(verticalSlideMotor, vertical_level_ticks, 1);
+        vertical_level = 1;
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        rotationServo.setPosition(0.21);
+        scissorServo.setPosition(0.4);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Initialized");
@@ -87,36 +104,87 @@ public class TeleopAttachTest extends OpMode {
                 if(gamepad2.b){
                     attachState = AttachmentState.RIGHT;
                 }
+                if(gamepad2.left_bumper){
+                    attachState = AttachmentState.DROP;
+                }
+                if(gamepad2.right_bumper){
+                    attachState = AttachmentState.PICKUP;
+                }
                 break;
 
             case UP: //State for moving arm up one level
-                if(level < vertical_level_ticks.length - 1){
-                    level += 1;
-                    moveLinearSlides(verticalSlideMotor, vertical_level_ticks);
+                if(vertical_level < vertical_level_ticks.length - 1){
+                    vertical_level += 1;
+                    moveLinearSlides(verticalSlideMotor, vertical_level_ticks, vertical_level);
                 }
                 attachState = AttachmentState.START;
                 break;
 
             case DOWN: //State for moving arm down one level
-                if(level > 0){
-                    level -= 1;
-                    moveLinearSlides(verticalSlideMotor, vertical_level_ticks);
+                if(vertical_level > 0){
+                    vertical_level -= 1;
+                    moveLinearSlides(verticalSlideMotor, vertical_level_ticks, vertical_level);
                 }
                 attachState = AttachmentState.START;
                 break;
 
             case LEFT:
-                rotationServo.setPosition(-0.5);
+                rotationServo.setPosition(0.21);
                 telemetry.addData("rotationServo", "moved left");
                 telemetry.update();
                 attachState = AttachmentState.START;
+                break;
 
             case RIGHT:
-                rotationServo.setPosition(0.5);
+                rotationServo.setPosition(0.85);
                 telemetry.addData("rotationServo", "moved left");
                 telemetry.update();
                 attachState = AttachmentState.START;
+                break;
+
+            case PICKUP:
+                scissorServo.setPosition(0.4);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                alignServo.setPosition(0.5);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                moveLinearSlides(verticalSlideMotor, vertical_level_ticks, 0);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                alignServo.setPosition(1.0);
+                //Not working here
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                scissorServo.setPosition(0.5);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                moveLinearSlides(verticalSlideMotor, vertical_level_ticks, 1);
+                vertical_level = 1;
+                attachState = AttachmentState.START;
+                break;
+
+            case DROP:
+                scissorServo.setPosition(0.4);
+                attachState = AttachmentState.START;
+                break;
         }
+        driveWithTwoJoysticks();
     }
 
     /*
@@ -127,7 +195,49 @@ public class TeleopAttachTest extends OpMode {
         isLoop = false;
     }
 
-    public void moveLinearSlides(DcMotor slideMotor, int[] level_ticks){
+    // drive with joysticks - WIP
+    public void driveWithTwoJoysticks() {
+        double drivingPower = gamepad1.left_stick_y;
+        double turningPower = gamepad1.right_stick_x;
+        double strafing = gamepad1.left_stick_x;
+        if (Math.abs(strafing) < 0.03) strafing = 0;
+        double leftBackPower = drivingPower - turningPower + strafing;
+        double leftFrontPower = drivingPower - turningPower - strafing;
+        double rightFrontPower = drivingPower + turningPower + strafing;
+        double rightBackPower = drivingPower + turningPower - strafing;
+        if(gamepad1.left_bumper) {
+            leftBackPower /= 3;
+            leftFrontPower /= 3;
+            rightFrontPower /= 3;
+            rightBackPower /= 3;
+        }
+        else if(gamepad1.right_bumper) {
+            leftBackPower /= 1.2;
+            leftFrontPower /= 1.2;
+            rightFrontPower /= 1.2;
+            rightBackPower /= 1.2;
+        }
+        else if (isLoop){
+            leftBackPower /= 1.6;
+            leftFrontPower /= 1.6;
+            rightFrontPower /= 1.6;
+            rightBackPower /= 1.6;
+        }
+        else{
+            leftBackPower /= 1.6;
+            leftFrontPower /= 1.6;
+            rightFrontPower /= 1.6;
+            rightBackPower /= 1.6;
+        }
+
+        //sets the speed of the drive motors
+        robot.getLeftBackDrive().setPower(leftBackPower);
+        robot.getLeftFrontDrive().setPower(leftFrontPower);
+        robot.getRightFrontDrive().setPower(rightFrontPower);
+        robot.getRightBackDrive().setPower(rightBackPower);
+    }
+
+    public void moveLinearSlides(DcMotor slideMotor, int[] level_ticks, int level){
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideMotor.setTargetPosition(level_ticks[level]);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -135,11 +245,10 @@ public class TeleopAttachTest extends OpMode {
         while (isLoop && slideMotor.isBusy()) {
             telemetry.addData("LFT, RFT", "Running to %7d", level_ticks[level]);
             telemetry.addData("LFP, RFP", "Running at %7d",
-                    verticalSlideMotor.getCurrentPosition()
+                    slideMotor.getCurrentPosition()
             );
             telemetry.addData("level", level);
             telemetry.update();
         }
-        slideMotor.setPower(0.0);
     }
 }

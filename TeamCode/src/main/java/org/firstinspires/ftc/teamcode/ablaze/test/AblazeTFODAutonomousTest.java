@@ -11,7 +11,7 @@ public class AblazeTFODAutonomousTest extends LinearOpMode{
     private ElapsedTime runtime = new ElapsedTime();
     private AblazeRobot ablazeRobot = new AblazeRobot();
     private AblazeTFOD tfod = new AblazeTFOD();
-    private int milliseconds = 0;
+    private int zone;
 
     private double motorPower = .5;
 
@@ -23,16 +23,36 @@ public class AblazeTFODAutonomousTest extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
-            tfod.detectElement();
+            zone = tfod.detectElement();
 
-            milliseconds = tfod.time();
-            telemetry.addData("Time: ", milliseconds);
+            telemetry.addData("Zone #: ", zone);
 
-            ablazeRobot.getLeftBackDrive().setPower(motorPower);
-            ablazeRobot.getRightBackDrive().setPower(motorPower);
-            ablazeRobot.getLeftFrontDrive().setPower(motorPower);
-            ablazeRobot.getRightFrontDrive().setPower(motorPower);
-            sleep(milliseconds);
+            if(zone == 1) {
+                ablazeRobot.getRightBackDrive().setPower(motorPower);
+                ablazeRobot.getLeftBackDrive().setPower(motorPower);
+                ablazeRobot.getLeftFrontDrive().setPower(motorPower);
+                ablazeRobot.getRightFrontDrive().setPower(motorPower);
+                sleep(500);
+            } else if(zone == 2) {
+                ablazeRobot.getRightBackDrive().setPower(motorPower);
+                ablazeRobot.getLeftBackDrive().setPower(motorPower);
+                ablazeRobot.getLeftFrontDrive().setPower(motorPower);
+                ablazeRobot.getRightFrontDrive().setPower(motorPower);
+                sleep(1000);
+            } else if (zone == 3) {
+                ablazeRobot.getRightBackDrive().setPower(motorPower);
+                ablazeRobot.getLeftBackDrive().setPower(motorPower);
+                ablazeRobot.getLeftFrontDrive().setPower(motorPower);
+                ablazeRobot.getRightFrontDrive().setPower(motorPower);
+                sleep(1500);
+            } if(zone == 1) {
+                ablazeRobot.getRightBackDrive().setPower(motorPower);
+                ablazeRobot.getLeftBackDrive().setPower(motorPower);
+                ablazeRobot.getLeftFrontDrive().setPower(motorPower);
+                ablazeRobot.getRightFrontDrive().setPower(motorPower);
+                sleep(2000);
+            }
+
         }
     }
 }

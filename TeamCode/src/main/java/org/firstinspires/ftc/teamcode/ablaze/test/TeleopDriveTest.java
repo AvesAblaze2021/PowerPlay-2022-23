@@ -4,12 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
 
 //Teleop test program for controlling the drivetrain
 @TeleOp
 public class TeleopDriveTest extends OpMode {
-    PracticeRobot robot = new PracticeRobot();
+    AblazeRobot robot = new AblazeRobot();
     boolean isLoop = false;
 
     /*

@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.ablaze.common.PracticeRobot;
+import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 @TeleOp(name="AblazeTeleop")
 public class AblazeTeleop extends OpMode{
-    PracticeRobot robot = new PracticeRobot();
+    AblazeRobot robot = new AblazeRobot();
     ElapsedTime runtime = new ElapsedTime();
 
     private boolean isLoop = false;
-    private int level = 0; //0 = Start, 1 = Ground, 2 = Medium, 3 = High
+    private int level = 0; //0 = Start, 1 = Low, 2 = Medium, 3 = High
     private final int[] level_ticks = {0, 500, 1000, 1500, 1700}; //Tick values for every level
     private DcMotor verticalSlideMotor;
     private Servo rotationServo;
@@ -46,8 +46,8 @@ public class AblazeTeleop extends OpMode{
         robot.initialize(hardwareMap);
 
         //Stop and reset vertical slide encoder
-        verticalSlideMotor = null;
-        rotationServo = null;
+        verticalSlideMotor = robot.getVerticalSlideMotor();
+        rotationServo = robot.getRotationServo();
         //rotationServo.setDirection(Servo.Direction.FORWARD);
         //rotationServo.setPosition(0.0);
 
