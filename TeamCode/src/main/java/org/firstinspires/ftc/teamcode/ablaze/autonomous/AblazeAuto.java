@@ -17,17 +17,13 @@ public class AblazeAuto extends LinearOpMode {
     AblazeRobot robot = new AblazeRobot();
     RRNavigation nav = new RRNavigation();
     AblazeTFOD tfod = new AblazeTFOD();
-    private final int[] vertical_level_ticks = {100, 1500, 3500}; //Tick values for every level
-    private final int[] horizontal_level_ticks = {0, 1000};
+    private final int[] vertical_level_ticks = {100, 1200, 3800}; //Tick values for every level
     private int signalZone = 2; //temporary
     private DcMotor verticalSlideMotor;
-    private DcMotor horizontalSlideMotor;
     private Servo rotationServo;
     private Servo scissorServo;
-    private Servo alignServo;
-    String location = "A5";
-    private int horizontal_level = 0; //0 = Start, 1 = Low, 2 = Medium, 3 = High
-    private int vertical_level = 0;
+    private double pickupPos = 0.5;
+    private double dropPos = 0.4;
     private final double motorPower = 0.3;
 
     @Override
@@ -40,7 +36,6 @@ public class AblazeAuto extends LinearOpMode {
         verticalSlideMotor = robot.getVerticalSlideMotor();
         rotationServo = robot.getRotationServo();
         scissorServo = robot.getScissorServo();
-        alignServo = robot.getAlignServo();
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
 
@@ -49,27 +44,23 @@ public class AblazeAuto extends LinearOpMode {
         telemetry.addData("Mode", "running");
         telemetry.update();
 
-        //Phase 1: Init
-        scissorServo.setPosition(0.5);
-        vertical_level = 1;
-        moveLinearSlides(verticalSlideMotor, vertical_level_ticks, vertical_level);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        //Phase 1: Setup - get scissors + arm ready
+        scissorServo.setPosition(pickupPos);
+        moveLinearSlides(verticalSlideMotor, vertical_level_ticks, 1);
         rotationServo.setPosition(0.21);
+        sleep(1000);
 
+        //Phase 2: Auto - Detect signal zone, deliver pre-load cone, park
         //signalZone = tfod.detectElement();
         nav.turn(90);
         nav.moveForward(22);
         nav.turn(-90);
         nav.moveForward(22);
         nav.turn(45);
+        moveLinearSlides(verticalSlideMotor, vertical_level_ticks, 2);
         nav.moveForward(2);
-        vertical_level += 1;
-        moveLinearSlides(verticalSlideMotor, vertical_level_ticks, vertical_level);
-        scissorServo.setPosition(0.4);
+        scissorServo.setPosition(dropPos);
+        sleep(500);
         nav.moveBackward(2);
         nav.turn(-45);
         nav.turn(-90);
@@ -94,6 +85,7 @@ public class AblazeAuto extends LinearOpMode {
             telemetry.addData("level", level);
             telemetry.update();
         }
+        sleep(500);
     }
 }
 

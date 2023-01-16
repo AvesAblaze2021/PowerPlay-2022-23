@@ -21,8 +21,11 @@ public class TeleopAttachTest extends OpMode {
     private Servo scissorServo;
     private Servo alignServo;
     private final double motorPower = 0.3;
-    int vertical_level = 0;
-
+    private int vertical_level = 1; //Default position of arm - 0 is for picking up cones
+    private double clawPickupPos = 1.0;
+    private double clawDropPos = 0.0;
+    private double rotDeliverPos = 0.85;
+    private double rotPickupPos = 0.21;
     private enum AttachmentState{
         START, //Initial State - gamepad monitoring occurs here
         UP, //Moves linear slide up one level
@@ -51,13 +54,8 @@ public class TeleopAttachTest extends OpMode {
         scissorServo = robot.getScissorServo();
         alignServo = robot.getAlignServo();
 
-        moveLinearSlides(verticalSlideMotor, vertical_level_ticks, 1);
-        vertical_level = 1;
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        moveLinearSlides(verticalSlideMotor, vertical_level_ticks, vertical_level);
+
         rotationServo.setPosition(0.21);
         scissorServo.setPosition(0.4);
 
@@ -97,18 +95,16 @@ public class TeleopAttachTest extends OpMode {
                     attachState = AttachmentState.DOWN;
                 }
                 if(gamepad2.x){
-                    telemetry.addData("button", "x");
-                    telemetry.update();
                     attachState = AttachmentState.LEFT;
                 }
                 if(gamepad2.b){
                     attachState = AttachmentState.RIGHT;
                 }
-                if(gamepad2.left_bumper){
-                    attachState = AttachmentState.DROP;
-                }
                 if(gamepad2.right_bumper){
                     attachState = AttachmentState.PICKUP;
+                }
+                if(gamepad2.left_bumper){
+                    attachState = AttachmentState.DROP;
                 }
                 break;
 
@@ -129,58 +125,22 @@ public class TeleopAttachTest extends OpMode {
                 break;
 
             case LEFT:
-                rotationServo.setPosition(0.21);
-                telemetry.addData("rotationServo", "moved left");
-                telemetry.update();
+                rotationServo.setPosition(rotPickupPos);
                 attachState = AttachmentState.START;
                 break;
 
             case RIGHT:
-                rotationServo.setPosition(0.85);
-                telemetry.addData("rotationServo", "moved left");
-                telemetry.update();
+                rotationServo.setPosition(rotDeliverPos);
                 attachState = AttachmentState.START;
                 break;
 
             case PICKUP:
-                scissorServo.setPosition(0.4);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                alignServo.setPosition(0.5);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                moveLinearSlides(verticalSlideMotor, vertical_level_ticks, 0);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                alignServo.setPosition(1.0);
-                //Not working here
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                scissorServo.setPosition(0.5);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                moveLinearSlides(verticalSlideMotor, vertical_level_ticks, 1);
-                vertical_level = 1;
+                scissorServo.setPosition(clawPickupPos);
                 attachState = AttachmentState.START;
                 break;
 
             case DROP:
-                scissorServo.setPosition(0.4);
+                scissorServo.setPosition(clawDropPos);
                 attachState = AttachmentState.START;
                 break;
         }
