@@ -14,12 +14,9 @@ public class AblazeRobot {
     private DcMotor leftFrontDrive = null;
     private DcMotor rightBackDrive = null;
     private DcMotor rightFrontDrive = null;
-    private DcMotor horizontalSlideMotor = null;
     private DcMotor verticalSlideMotor = null;
     private Servo rotationServo = null;
-    private Servo intakeServo = null;
-    private Servo scissorServo = null;
-    private Servo alignServo = null;
+    private Servo clawServo = null;
     private WebcamName webCam;
     private BNO055IMU  imu;
 
@@ -30,32 +27,24 @@ public class AblazeRobot {
         rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontMotor"); // Port: 1
         rightBackDrive = hwMap.get(DcMotor.class, "rightBackMotor"); // Port: 2
         leftBackDrive = hwMap.get(DcMotor.class, "leftBackMotor"); // Port: 3
-        //horizontalSlideMotor =  hwMap.get(DcMotor.class, "horizontalSlideMotor");//Port X0
         verticalSlideMotor =  hwMap.get(DcMotor.class, "verticalSlideMotor");//Port X1
-        horizontalSlideMotor = hwMap.get(DcMotor.class, "horizontalSlideMotor");
         rotationServo = hwMap.get(Servo.class, "rotationServo");
-        intakeServo = hwMap.get(Servo.class, "intakeServo");
-        scissorServo = hwMap.get(Servo.class, "scissorServo");
-        alignServo = hwMap.get(Servo.class, "alignServo");
+        clawServo = hwMap.get(Servo.class, "scissorServo");
 
         imu = hwMap.get(BNO055IMU.class, "imu1"); //Port I2 Bus 0
         webCam = hwMap.get(WebcamName.class, "Webcam 1"); // Port: 3
 
         rotationServo.setDirection(Servo.Direction.FORWARD);
-        scissorServo.setDirection(Servo.Direction.FORWARD);
-        alignServo.setDirection(Servo.Direction.FORWARD);
+        clawServo.setDirection(Servo.Direction.FORWARD);
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        horizontalSlideMotor.setDirection(DcMotor.Direction.REVERSE);
         verticalSlideMotor.setDirection(DcMotor.Direction.REVERSE);
-        horizontalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        horizontalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         verticalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -76,8 +65,6 @@ public class AblazeRobot {
     }
 
     public DcMotor getRightFrontDrive() { return rightFrontDrive; }
-
-    public DcMotor getHorizontalSlideMotor() { return horizontalSlideMotor; }
 
     public DcMotor getVerticalSlideMotor() { return verticalSlideMotor; }
 
@@ -107,11 +94,5 @@ public class AblazeRobot {
         return rotationServo;
     }
 
-    public Servo getIntakeServo() {
-        return intakeServo;
-    }
-
-    public Servo getScissorServo(){return scissorServo;}
-
-    public Servo getAlignServo(){return alignServo;}
+    public Servo getClawServo(){return clawServo;}
 }
