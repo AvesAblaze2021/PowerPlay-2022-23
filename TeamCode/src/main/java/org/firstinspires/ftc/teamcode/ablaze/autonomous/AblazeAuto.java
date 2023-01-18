@@ -21,34 +21,36 @@ public class AblazeAuto extends LinearOpMode {
     private int signalZone = 2; //temporary
     private DcMotor verticalSlideMotor;
     private Servo rotationServo;
-    private Servo scissorServo;
-    private double pickupPos = 0.5;
-    private double dropPos = 0.4;
+    private Servo clawServo;
+    private double clawOpenPos = 0.0;
+    private double clawClosePos = 1.0;
+    private double rotDeliverPos = 0.85;
+    private double rotPickupPos = 0.21;
     private final double motorPower = 0.3;
 
     @Override
     public void runOpMode() {
+        // Initialize Hardware
         robot.initialize(hardwareMap);
         nav.initialize(hardwareMap);
         //tfod.initialize(hardwareMap, robot);
-
-        // Initialize Robot
         verticalSlideMotor = robot.getVerticalSlideMotor();
         rotationServo = robot.getRotationServo();
-        scissorServo = robot.getScissorServo();
+        clawServo = robot.getClawServo();
+
+        //Init state set after start b/c of size limitations
+
+        //Notify init end
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
 
         waitForStart();
 
-        telemetry.addData("Mode", "running");
-        telemetry.update();
-
         //Phase 1: Setup - get scissors + arm ready
-        scissorServo.setPosition(pickupPos);
-        moveLinearSlides(verticalSlideMotor, vertical_level_ticks, 1);
-        rotationServo.setPosition(0.21);
-        sleep(1000);
+        clawServo.setPosition(clawClosePos);
+        moveLinearSlides(1);
+        rotationServo.setPosition(rotPickupPos);
+        sleep(500);
 
         //Phase 2: Auto - Detect signal zone, deliver pre-load cone, park
         //signalZone = tfod.detectElement();
@@ -57,9 +59,9 @@ public class AblazeAuto extends LinearOpMode {
         nav.turn(-90);
         nav.moveForward(22);
         nav.turn(45);
-        moveLinearSlides(verticalSlideMotor, vertical_level_ticks, 2);
+        moveLinearSlides(2);
         nav.moveForward(2);
-        scissorServo.setPosition(dropPos);
+        clawServo.setPosition(clawOpenPos);
         sleep(500);
         nav.moveBackward(2);
         nav.turn(-45);
@@ -70,17 +72,18 @@ public class AblazeAuto extends LinearOpMode {
         else if(signalZone == 3){
             nav.moveForward(43);
         }
+        moveLinearSlides(0); //Move arm to teleop init pos
     }
 
-    public void moveLinearSlides(DcMotor slideMotor, int[] level_ticks, int level){
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slideMotor.setTargetPosition(level_ticks[level]);
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideMotor.setPower(motorPower);
-        while (slideMotor.isBusy()) {
+    public void moveLinearSlides(int level){
+        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        verticalSlideMotor.setTargetPosition(level_ticks[level]);
+        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlideMotor.setPower(motorPower);
+        while (verticalSlideMotor.isBusy()) {
             telemetry.addData("LFT, RFT", "Running to %7d", level_ticks[level]);
             telemetry.addData("LFP, RFP", "Running at %7d",
-                    slideMotor.getCurrentPosition()
+                    verticalSlideMotor.getCurrentPosition()
             );
             telemetry.addData("level", level);
             telemetry.update();
