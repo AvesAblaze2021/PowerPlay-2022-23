@@ -27,6 +27,15 @@ public class AblazeAuto extends LinearOpMode {
     private double rotDeliverPos = 0.85;
     private double rotPickupPos = 0.21;
     private final double motorPower = 0.3;
+    
+    /*
+    POS KEY:
+    1: Top left corner ("A5")
+    2: Bottom left corner ("A1")
+    3: Top right corner ("E5")
+    4: Bottom right corner ("E1")
+    */
+    private final int startPos = 1; //Change to specific pos
 
     @Override
     public void runOpMode() {
@@ -48,31 +57,58 @@ public class AblazeAuto extends LinearOpMode {
 
         //Phase 1: Setup - get scissors + arm ready
         clawServo.setPosition(clawClosePos);
-        moveLinearSlides(1);
+        moveLinearSlides(1); //will sleep for 500 ms before next command
         rotationServo.setPosition(rotPickupPos);
         sleep(500);
 
         //Phase 2: Auto - Detect signal zone, deliver pre-load cone, park
         //signalZone = tfod.detectElement();
-        nav.turn(90);
-        nav.moveForward(22);
-        nav.turn(-90);
-        nav.moveForward(22);
-        nav.turn(45);
-        moveLinearSlides(2);
-        nav.moveForward(2);
-        clawServo.setPosition(clawOpenPos);
-        sleep(500);
-        nav.moveBackward(2);
-        nav.turn(-45);
-        nav.turn(-90);
-        if(signalZone == 2){
-            nav.moveForward(24);
+        if(pos == 2 || pos == 3){
+            nav.turn(90);
+            nav.moveForward(22);
+            nav.turn(-90);
+            nav.moveForward(22);
+            nav.turn(45);
+            moveLinearSlides(2); //will sleep for 500 ms before next command
+            nav.moveForward(2);
+            clawServo.setPosition(clawOpenPos);
+            sleep(500);
+            nav.moveBackward(2);
+            nav.turn(-45);
+            nav.turn(-90);
+            if(signalZone == 2){
+                nav.moveForward(24);
+            }
+            else if(signalZone == 3){
+                nav.moveForward(43);
+            }
+            
+            //Move arm to teleop init pos
+            moveLinearSlides(0); //will sleep for 500 ms before next command
         }
-        else if(signalZone == 3){
-            nav.moveForward(43);
+        else if(pos == 1 || pos == 4){
+            nav.turn(-90);
+            nav.moveForward(22);
+            nav.turn(90);
+            nav.moveForward(22);
+            nav.turn(-45);
+            moveLinearSlides(2); //will sleep for 500 ms before next command
+            sleep(500);
+            nav.moveForward(2);
+            clawServo.setPosition(clawOpenPos);
+            nav.moveBackward(2);
+            nav.turn(45);
+            nav.turn(90);
+            if(signalZone == 2){
+                nav.moveForward(24);
+            }
+            else if(signalZone == 3){
+                nav.moveForward(43);
+            }
+            
+            //Move arm to teleop init pos
+            moveLinearSlides(0); //will sleep for 500 ms before next command
         }
-        moveLinearSlides(0); //Move arm to teleop init pos
     }
 
     public void moveLinearSlides(int level){
