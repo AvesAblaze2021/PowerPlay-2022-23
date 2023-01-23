@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.ablaze.teleop.AblazeTeleop;
 
 //Teleop test program for testing attachments
 @TeleOp
-public class TeleopAttachTest extends OpMode {
+public class ClawTest extends OpMode {
     AblazeRobot robot = new AblazeRobot();
 
     private boolean isLoop = false;
