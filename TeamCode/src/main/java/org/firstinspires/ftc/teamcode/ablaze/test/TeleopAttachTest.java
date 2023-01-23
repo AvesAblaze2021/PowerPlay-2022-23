@@ -1,3 +1,4 @@
+//OFFICIAL TELEOP
 package org.firstinspires.ftc.teamcode.ablaze.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,22 +10,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 import org.firstinspires.ftc.teamcode.ablaze.teleop.AblazeTeleop;
 
-//Teleop test program for testing attachments
 @TeleOp
 public class TeleopAttachTest extends OpMode {
-    AblazeRobot robot = new AblazeRobot();
-
+    private AblazeRobot robot = new AblazeRobot();
     private boolean isLoop = false;
     private final int[] vertical_level_ticks = {100, 1200, 2300, 3800}; //Tick values for every level
     private DcMotor verticalSlideMotor;
-    private Servo rotationServo;
     private Servo clawServo;
     private final double motorPower = 0.3;
     private int vertical_level = 0; //Default position of arm - set at the end of auto
     private double clawOpenPos = 0.0;
     private double clawClosePos = 1.0;
-    private double rotDeliverPos = 0.85;
-    private double rotPickupPos = 0.21;
     private enum AttachmentState{
         START, //Initial State - gamepad monitoring occurs here
         UP, //Moves linear slide up one level
@@ -36,7 +32,7 @@ public class TeleopAttachTest extends OpMode {
         AUTO_PICKUP, //Automates pickup process
         AUTO_DELIVER //Automates delivery process
     };
-
+    private ElapsedTime runtime = new ElapsedTime();
     private AttachmentState attachState = AttachmentState.START;
 
     /*
@@ -127,16 +123,6 @@ public class TeleopAttachTest extends OpMode {
                 attachState = AttachmentState.START;
                 break;
 
-            case LEFT: //State for moving arm left - pickup
-                rotationServo.setPosition(rotPickupPos);
-                attachState = AttachmentState.START;
-                break;
-
-            case RIGHT: //State for moving arm right - delivery
-                rotationServo.setPosition(rotDeliverPos);
-                attachState = AttachmentState.START;
-                break;
-
             case OPEN: //State for opening claw - delivery
                 clawServo.setPosition(clawOpenPos);
                 attachState = AttachmentState.START;
@@ -149,24 +135,18 @@ public class TeleopAttachTest extends OpMode {
             
             case AUTO_PICKUP: //Automated state for pickup
                 //Enforce initial positions
-                initPickup();
+                pickup();
 
-                clawServo.setPosition(clawClosePos);
-                vertical_level = 1;
-                moveLinearSlides();
-                rotationServo.setPosition(rotDeliverPos);
+                delivery(); //move to delivery position
 
                 attachState = AttachmentState.START;
                 break;
 
             case AUTO_DELIVER: //Automated state for delivery
                 //Enforce initial positions
-                initDelivery();
+                delivery();
 
-                clawServo.setPosition(clawOpenPos);
-                vertical_level = 0;
-                moveLinearSlides();
-                rotationServo.setPosition(rotPickupPos); //may run into junction - test further
+                pickup(); //move to pickup position
 
                 attachState = AttachmentState.START;
                 break;
@@ -242,18 +222,26 @@ public class TeleopAttachTest extends OpMode {
     }
 
     //Moves robot to delivery state
-    public void initDelivery(){
-        rotationServo.setPosition(rotDeliverPos);
-        clawServo.setPosition(clawClosePos);;
-        vertical_level = 0;
+    public void delivery(){
+        clawServo.setPosition(clawClosePos);
+        sleep(500);
+        vertical_level = 1;
         moveLinearSlides();
     }
     
     //Moves robot to pickup state
-    public void initPickup(){
-        rotationServo.setPosition(rotPickupPos);
+    public void pickup(){
         clawServo.setPosition(clawOpenPos);
+        sleep(500);
         vertical_level = 0;
         moveLinearSlides();
+    }
+    
+    //Async sleep that works with loop() (use milliseconds)
+    public void sleep(int ms){
+        runtime.reset();
+        while(runtime.milliseconds < ms){
+            continue;
+        }
     }
 }
