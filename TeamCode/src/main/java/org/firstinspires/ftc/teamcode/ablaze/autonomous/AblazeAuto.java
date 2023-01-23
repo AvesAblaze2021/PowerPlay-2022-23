@@ -20,12 +20,9 @@ public class AblazeAuto extends LinearOpMode {
     private final int[] vertical_level_ticks = {100, 1200, 3800}; //Tick values for every level
     private int signalZone = 2; //temporary
     private DcMotor verticalSlideMotor;
-    private Servo rotationServo;
     private Servo clawServo;
     private double clawOpenPos = 0.0;
     private double clawClosePos = 1.0;
-    private double rotDeliverPos = 0.85;
-    private double rotPickupPos = 0.21;
     private final double motorPower = 0.3;
     
     /*
@@ -44,7 +41,6 @@ public class AblazeAuto extends LinearOpMode {
         nav.initialize(hardwareMap);
         //tfod.initialize(hardwareMap, robot);
         verticalSlideMotor = robot.getVerticalSlideMotor();
-        rotationServo = robot.getRotationServo();
         clawServo = robot.getClawServo();
 
         //Init state set after start b/c of size limitations
@@ -58,7 +54,6 @@ public class AblazeAuto extends LinearOpMode {
         //Phase 1: Setup - get scissors + arm ready
         clawServo.setPosition(clawClosePos);
         moveLinearSlides(1); //will sleep for 500 ms before next command
-        rotationServo.setPosition(rotPickupPos);
         sleep(500);
 
         //Phase 2: Auto - Detect signal zone, deliver pre-load cone, park
@@ -113,6 +108,7 @@ public class AblazeAuto extends LinearOpMode {
 
     public void moveLinearSlides(int level){
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        
         verticalSlideMotor.setTargetPosition(level_ticks[level]);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         verticalSlideMotor.setPower(motorPower);
@@ -127,4 +123,3 @@ public class AblazeAuto extends LinearOpMode {
         sleep(500);
     }
 }
-
