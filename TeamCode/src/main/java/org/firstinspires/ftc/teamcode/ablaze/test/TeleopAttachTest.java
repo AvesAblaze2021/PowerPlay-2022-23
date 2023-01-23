@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 import org.firstinspires.ftc.teamcode.ablaze.teleop.AblazeTeleop;
@@ -47,7 +48,6 @@ public class TeleopAttachTest extends OpMode {
         //Initialize Hardware
         robot.initialize(hardwareMap);
         verticalSlideMotor = robot.getVerticalSlideMotor();
-        rotationServo = robot.getRotationServo();
         clawServo = robot.getClawServo();
 
         //Teleop's init state is set at the end of Autonomous
@@ -206,19 +206,18 @@ public class TeleopAttachTest extends OpMode {
 
     //Moves slides to currently set vertical level
     public void moveLinearSlides(){
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slideMotor.setTargetPosition(level_ticks[vertical_level]);
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideMotor.setPower(motorPower);
-        while (isLoop && slideMotor.isBusy()) {
-            telemetry.addData("LFT, RFT", "Running to %7d", level_ticks[level]);
+        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        verticalSlideMotor.setTargetPosition(vertical_level_ticks[vertical_level]);
+        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        verticalSlideMotor.setPower(motorPower);
+        while (isLoop && verticalSlideMotor.isBusy()) {
+            telemetry.addData("LFT, RFT", "Running to %7d", vertical_level_ticks[vertical_level]);
             telemetry.addData("LFP, RFP", "Running at %7d",
-                    slideMotor.getCurrentPosition()
+                    verticalSlideMotor.getCurrentPosition()
             );
-            telemetry.addData("level", level);
+            telemetry.addData("level", vertical_level);
             telemetry.update();
         }
-        sleep(500);
     }
 
     //Moves robot to delivery state
@@ -240,7 +239,7 @@ public class TeleopAttachTest extends OpMode {
     //Async sleep that works with loop() (use milliseconds)
     public void sleep(int ms){
         runtime.reset();
-        while(runtime.milliseconds < ms){
+        while(runtime.milliseconds() < ms){
             continue;
         }
     }

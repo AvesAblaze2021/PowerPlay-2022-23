@@ -58,7 +58,7 @@ public class AblazeAuto extends LinearOpMode {
 
         //Phase 2: Auto - Detect signal zone, deliver pre-load cone, park
         //signalZone = tfod.detectElement();
-        if(pos == 2 || pos == 3){
+        if(startPos == 2 || startPos == 3){
             nav.turn(90);
             nav.moveForward(22);
             nav.turn(-90);
@@ -81,7 +81,7 @@ public class AblazeAuto extends LinearOpMode {
             //Move arm to teleop init pos
             moveLinearSlides(0); //will sleep for 500 ms before next command
         }
-        else if(pos == 1 || pos == 4){
+        else if(startPos == 1 || startPos == 4){
             nav.turn(-90);
             nav.moveForward(22);
             nav.turn(90);
@@ -108,12 +108,11 @@ public class AblazeAuto extends LinearOpMode {
 
     public void moveLinearSlides(int level){
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        
-        verticalSlideMotor.setTargetPosition(level_ticks[level]);
+        verticalSlideMotor.setTargetPosition(vertical_level_ticks[level]);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         verticalSlideMotor.setPower(motorPower);
         while (verticalSlideMotor.isBusy()) {
-            telemetry.addData("LFT, RFT", "Running to %7d", level_ticks[level]);
+            telemetry.addData("LFT, RFT", "Running to %7d", vertical_level_ticks[level]);
             telemetry.addData("LFP, RFP", "Running at %7d",
                     verticalSlideMotor.getCurrentPosition()
             );
