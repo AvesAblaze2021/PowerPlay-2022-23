@@ -4,12 +4,14 @@ package org.firstinspires.ftc.teamcode.ablaze.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
-@TeleOp(name="AblazeTeleop")
-public class AblazeTeleop extends OpMode{
+
+@TeleOp(name = "AblazeTeleop")
+public class AblazeTeleop extends OpMode {
     AblazeRobot robot = new AblazeRobot();
     ElapsedTime runtime = new ElapsedTime();
 
@@ -19,15 +21,18 @@ public class AblazeTeleop extends OpMode{
     private DcMotor VerticalSlideMotor;
     private Servo rotationServo;
     private final double motorPower = 0.3;
+    private int slidePower;
 
     //All possible States for all Attachments - change for Power Play
-    private enum AttachmentState{
+    private enum AttachmentState {
         START, //Initial State - gamepad monitoring occurs here
         UP, //Moves linear slide up one level
         DOWN, //Moves linear slide down one level
         LEFT, //Rotates arm left
         RIGHT //Rotates arm right
-    };
+    }
+
+    ;
 
     private AttachmentState attachState = AttachmentState.START;
 
@@ -54,7 +59,9 @@ public class AblazeTeleop extends OpMode{
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        isLoop = true;
     }
+
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -76,43 +83,46 @@ public class AblazeTeleop extends OpMode{
      * Change for Power Play
      */
     @Override
-    public void loop(){
+    public void loop() {
         isLoop = true;
         //Check all states
-        switch(attachState){
+        switch (attachState) {
             case START: //Initial state - all gamepad conditionals go here, leads to other States
-                if(gamepad2.y){
+                if (gamepad2.y) {
                     attachState = AttachmentState.UP;
                 }
-                if(gamepad2.a){
+                if (gamepad2.a) {
                     attachState = AttachmentState.DOWN;
                 }
-                if(gamepad2.x){
+                if (gamepad2.x) {
                     telemetry.addData("button", "x");
                     telemetry.update();
                     attachState = AttachmentState.LEFT;
                 }
-                if(gamepad2.b){
+                if (gamepad2.b) {
                     attachState = AttachmentState.RIGHT;
                 }
                 break;
 
             case UP: //State for moving arm up one level
-                if(level < level_ticks.length - 1){
+                if (level < level_ticks.length - 1) {
+                   VerticalSlideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
                     level += 1;
+                    slidePower = 1;
                     moveLinearSlides();
                 }
                 attachState = AttachmentState.START;
                 break;
 
             case DOWN: //State for moving arm down one level
-                if(level > 0){
-                    level -= 1;
-                    moveLinearSlides();
-                }
-                attachState = AttachmentState.START;
-                break;
-
+if (level > 0) {
+    VerticalSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+    level -= 1;
+    moveLinearSlides();
+    slidePower = -1;
+    attachState = AttachmentState.START;
+    break;
+}
             case LEFT:
                 rotationServo.setPosition(-0.5);
                 telemetry.addData("rotationServo", "moved");
@@ -146,25 +156,22 @@ public class AblazeTeleop extends OpMode{
         double leftFrontPower = drivingPower - turningPower - strafing;
         double rightFrontPower = drivingPower + turningPower + strafing;
         double rightBackPower = drivingPower + turningPower - strafing;
-        if(gamepad1.left_bumper) {
+        if (gamepad1.left_bumper) {
             leftBackPower /= 3;
             leftFrontPower /= 3;
             rightFrontPower /= 3;
             rightBackPower /= 3;
-        }
-        else if(gamepad1.right_bumper) {
+        } else if (gamepad1.right_bumper) {
             leftBackPower /= 1.2;
             leftFrontPower /= 1.2;
             rightFrontPower /= 1.2;
             rightBackPower /= 1.2;
-        }
-        else if (isLoop){
+        } else if (isLoop) {
             leftBackPower /= 1.6;
             leftFrontPower /= 1.6;
             rightFrontPower /= 1.6;
             rightBackPower /= 1.6;
-        }
-        else{
+        } else {
             leftBackPower /= 1.6;
             leftFrontPower /= 1.6;
             rightFrontPower /= 1.6;
@@ -179,23 +186,47 @@ public class AblazeTeleop extends OpMode{
     }
 
 
+    public void moveLinearSlides() {
 
-    public void moveLinearSlides(){
-        isLoop = false;
+        VerticalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-        VerticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         VerticalSlideMotor.setTargetPosition(level_ticks[level]);
-        VerticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        VerticalSlideMotor.setPower(motorPower);
-        while (VerticalSlideMotor.isBusy()) {
-            telemetry.addData("LFT, RFT", "Running to %7d", level_ticks[level]);
-            telemetry.addData("LFP, RFP", "Running at %7d", VerticalSlideMotor.getCurrentPosition());
-            telemetry.addData("level", level);
-            telemetry.update();
-            VerticalSlideMotor.setPower(motorPower);
-        }
 
-        VerticalSlideMotor.setPower(0.0);
-    }
+        // set motors to run to target encoder position and stop with brakes on.
+        VerticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        telemetry.addData("Mode", "waiting");
+        telemetry.update();
+
+        // wait for start button.
+
+        if (isLoop) {
+
+            telemetry.addData("Mode", "running");
+            telemetry.update();
+            if (gamepad2.a) {
+                VerticalSlideMotor.setPower(-1);
+            }
+
+            resetRuntime
+                    ();
+
+    while (isLoop && getRuntime() < .6) {
+        telemetry.addData("vertical slide pos", VerticalSlideMotor.getCurrentPosition() + "  busy=" + VerticalSlideMotor.isBusy());
+        telemetry.update();
+        VerticalSlideMotor.setPower(1);
+
 }
+    if (VerticalSlideMotor.isBusy() != true) {
+        // set motor power to zero to turn off motors. The motors stop on their own but
+        // power is still applied so we turn off the power.
+
+    VerticalSlideMotor.setTargetPosition(0);
+}
+    }
+            // wait 5 sec to you can observe the final encoder position.
+            VerticalSlideMotor.setPower(0.0);
+        }
+    }
+
