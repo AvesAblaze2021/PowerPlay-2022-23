@@ -41,7 +41,7 @@ public class AblazeAuto extends LinearOpMode {
         nav.initialize(hardwareMap);
         //tfod.initialize(hardwareMap, robot);
         verticalSlideMotor = robot.getVerticalSlideMotor();
-        clawServo = robot.getClawServo();
+        //clawServo = robot.getClawServo();
 
         //Init state set after start b/c of size limitations
 

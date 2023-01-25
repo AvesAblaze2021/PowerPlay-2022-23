@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 import org.firstinspires.ftc.teamcode.ablaze.teleop.AblazeTeleop;
 
-@TeleOp
+@TeleOp (name = "TeleOpAttachTest")
 public class TeleopAttachTest extends OpMode {
     private AblazeRobot robot = new AblazeRobot();
     private boolean isLoop = false;
@@ -48,7 +48,7 @@ public class TeleopAttachTest extends OpMode {
         //Initialize Hardware
         robot.initialize(hardwareMap);
         verticalSlideMotor = robot.getVerticalSlideMotor();
-        clawServo = robot.getClawServo();
+        //clawServo = robot.getClawServo();
 
         //Teleop's init state is set at the end of Autonomous
 
@@ -124,12 +124,12 @@ public class TeleopAttachTest extends OpMode {
                 break;
 
             case OPEN: //State for opening claw - delivery
-                clawServo.setPosition(clawOpenPos);
+                //clawServo.setPosition(clawOpenPos);
                 attachState = AttachmentState.START;
                 break;
 
             case CLOSE: //State for closing claw - pickup
-                clawServo.setPosition(clawClosePos);
+                //clawServo.setPosition(clawClosePos);
                 attachState = AttachmentState.START;
                 break;
             
@@ -222,7 +222,7 @@ public class TeleopAttachTest extends OpMode {
 
     //Moves robot to delivery state
     public void delivery(){
-        clawServo.setPosition(clawClosePos);
+        //clawServo.setPosition(clawClosePos);
         sleep(500);
         vertical_level = 1;
         moveLinearSlides();
@@ -230,7 +230,7 @@ public class TeleopAttachTest extends OpMode {
     
     //Moves robot to pickup state
     public void pickup(){
-        clawServo.setPosition(clawOpenPos);
+        //clawServo.setPosition(clawOpenPos);
         sleep(500);
         vertical_level = 0;
         moveLinearSlides();

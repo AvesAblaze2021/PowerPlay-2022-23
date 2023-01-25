@@ -16,7 +16,7 @@ public class AblazeTeleop extends OpMode{
     private boolean isLoop = false;
     private int level = 0; //0 = Start, 1 = Low, 2 = Medium, 3 = High
     private final int[] level_ticks = {0, 500, 1000, 1500, 1700}; //Tick values for every level
-    private DcMotor verticalSlideMotor;
+    private DcMotor VerticalSlideMotor;
     private Servo rotationServo;
     private final double motorPower = 0.3;
 
@@ -46,7 +46,7 @@ public class AblazeTeleop extends OpMode{
         robot.initialize(hardwareMap);
 
         //Stop and reset vertical slide encoder
-        verticalSlideMotor = robot.getVerticalSlideMotor();
+        VerticalSlideMotor = robot.getVerticalSlideMotor();
         rotationServo = robot.getRotationServo();
         //rotationServo.setDirection(Servo.Direction.FORWARD);
         //rotationServo.setPosition(0.0);
@@ -181,18 +181,21 @@ public class AblazeTeleop extends OpMode{
 
 
     public void moveLinearSlides(){
-        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        verticalSlideMotor.setTargetPosition(level_ticks[level]);
-        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlideMotor.setPower(motorPower);
-        while (isLoop && verticalSlideMotor.isBusy()) {
+        isLoop = false;
+
+
+        VerticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        VerticalSlideMotor.setTargetPosition(level_ticks[level]);
+        VerticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        VerticalSlideMotor.setPower(motorPower);
+        while (VerticalSlideMotor.isBusy()) {
             telemetry.addData("LFT, RFT", "Running to %7d", level_ticks[level]);
-            telemetry.addData("LFP, RFP", "Running at %7d",
-                    verticalSlideMotor.getCurrentPosition()
-            );
+            telemetry.addData("LFP, RFP", "Running at %7d", VerticalSlideMotor.getCurrentPosition());
             telemetry.addData("level", level);
             telemetry.update();
+            VerticalSlideMotor.setPower(motorPower);
         }
-        verticalSlideMotor.setPower(0.0);
+
+        VerticalSlideMotor.setPower(0.0);
     }
 }

@@ -19,12 +19,7 @@ public class LinearSlideTest extends LinearOpMode{
   @Override
   public void runOpMode(){
     robot.initialize(hardwareMap);
-    horizontal = robot.getHorizontalSlideMotor();
     vertical = robot.getVerticalSlideMotor();
-
-    //Use these statements ONLY when testing moveSlideEncoderAbs
-    //vertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //DON'T NEED THIS FOR ABSOLUTE POS
-    //horizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     waitForStart();
 
