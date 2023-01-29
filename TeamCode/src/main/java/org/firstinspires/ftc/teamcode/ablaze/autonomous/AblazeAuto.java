@@ -8,6 +8,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 
 import org.firstinspires.ftc.teamcode.ablaze.common.Navigation;
+//This program will:
+//Read signal sleeve
+//Place preloaded cone to closest high junction (TBD)
+//Park robot in tile based on the sleeve reading
+//Plane (1 Dot): Place robot in 1 diagonal left tile
+//Logo (2 Dot): Place robot in 1 forward tile
+//Jacket (3 Dot): Place robot in 1 diagonal right tile
 
 @Autonomous
 public class AblazeAuto extends LinearOpMode {
