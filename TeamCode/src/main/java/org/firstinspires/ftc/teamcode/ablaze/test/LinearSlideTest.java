@@ -12,9 +12,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class LinearSlideTest extends LinearOpMode{
   AblazeRobot robot = new AblazeRobot();
   int lastPos = 0; //Used for encoder algorithm
-  double motorPower = 0.5;
+  double motorPower = 0.3;
   private DcMotor vertical;
-  private DcMotor horizontal;
 
   @Override
   public void runOpMode(){
@@ -23,7 +22,7 @@ public class LinearSlideTest extends LinearOpMode{
 
     waitForStart();
 
-    keepGettingPos(vertical);
+    moveSlideEncoderAbs(vertical, 50);
   }
 
   //Continiously prints current position of encoder

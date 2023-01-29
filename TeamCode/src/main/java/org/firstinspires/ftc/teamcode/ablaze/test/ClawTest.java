@@ -16,7 +16,7 @@ public class ClawTest extends OpMode {
     AblazeRobot robot = new AblazeRobot();
 
     private boolean isLoop = false;
-    //private Servo clawServo;
+    private Servo clawServo;
     private double clawOpenPos = 0.0;
     private double clawClosePos = 1.0;
 
@@ -31,7 +31,7 @@ public class ClawTest extends OpMode {
 
         //Initialize Hardware
         robot.initialize(hardwareMap);
-        //clawServo = robot.getClawServo();
+        clawServo = robot.getClawServo();
 
         //Teleop's init state is set at the end of Autonomous
 
@@ -62,10 +62,10 @@ public class ClawTest extends OpMode {
     @Override
     public void loop(){
         if(gamepad2.b){
-          //clawServo.setPosition(clawClosePos);
+          clawServo.setPosition(clawClosePos);
         }
         if(gamepad2.a){
-          //clawServo.setPosition(clawOpenPos);
+          clawServo.setPosition(clawOpenPos);
         }
     }
 

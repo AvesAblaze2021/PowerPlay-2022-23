@@ -8,15 +8,22 @@ import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 @Autonomous
 public class EncoderNavTest extends LinearOpMode {
     private AblazeRobot robot = new AblazeRobot();
-    private DcMotor flMotor = robot.getLeftFrontDrive();
-    private DcMotor frMotor = robot.getRightFrontDrive();
-    private DcMotor brMotor = robot.getRightBackDrive();
-    private DcMotor blMotor = robot.getLeftBackDrive();
+    private DcMotor flMotor;
+    private DcMotor frMotor;
+    private DcMotor brMotor;
+    private DcMotor blMotor;
     private double motorPower = 0.3;
 
     @Override
     public void runOpMode() {
         robot.initialize(hardwareMap);
+        flMotor = robot.getLeftFrontDrive();
+        frMotor = robot.getRightFrontDrive();
+        brMotor = robot.getRightBackDrive();
+        blMotor = robot.getLeftBackDrive();
+
+        waitForStart();
+
         encoderDrive(500);
 
     }
@@ -27,7 +34,7 @@ public class EncoderNavTest extends LinearOpMode {
         brMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        frMotor.setTargetPosition(position);
+        flMotor.setTargetPosition(position);
         blMotor.setTargetPosition(position);
         brMotor.setTargetPosition(position);
         frMotor.setTargetPosition(position);
