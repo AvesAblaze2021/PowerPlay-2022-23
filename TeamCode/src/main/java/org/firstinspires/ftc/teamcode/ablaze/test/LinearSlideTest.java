@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous
 public class LinearSlideTest extends LinearOpMode{
   AblazeRobot robot = new AblazeRobot();
-  int lastPos = 0; //Used for encoder algorithm
+  int lastPos = 0; //Used for rel encoder algorithm
   double motorPower = 0.3;
   private DcMotor vertical;
 
@@ -22,20 +22,9 @@ public class LinearSlideTest extends LinearOpMode{
 
     waitForStart();
 
-    moveSlideEncoderAbs(vertical, 50);
-  }
-
-  //Continiously prints current position of encoder
-  public void keepGettingPos(DcMotor slideMotor){
-    int pastPos = 0;
-    while(true){
-      int currentPos = slideMotor.getCurrentPosition();
-      if(currentPos != pastPos){
-        telemetry.addData("pos", currentPos);
-        telemetry.update();
-        pastPos = currentPos;
-      }
-    }
+    moveSlideEncoderAbs(vertical, 1000);
+    sleep(2000);
+    moveSlideEncoderAbs(vertical, 500);
   }
   
   //Regular timed algorithm
@@ -54,43 +43,42 @@ public class LinearSlideTest extends LinearOpMode{
 
   }
   
-  //Option 2 algorithm described in pseudocode - see drive
-  public void moveSlideEncoderRel(DcMotor slideMotor, int ticks){
+  //Relative algorithm that resets encoder after each move
+  public void moveSlideEncoderRel(int ticks){
     //Encoder setup - adjust tick value w/ last pos
     int newTicks = Math.abs(ticks - lastPos);
-    slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    vertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     
     //Starting motor
-    slideMotor.setTargetPosition(newTicks);
-    slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    slideMotor.setPower(0.2);
+    vertical.setTargetPosition(newTicks);
+    vertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    vertical.setPower(0.2);
     
     //Encoder loop
-    while(opModeIsActive() && slideMotor.isBusy()){
+    while(opModeIsActive() && vertical.isBusy()){
       continue;
     }
     
     //End motion + store current tick value before reset
-    slideMotor.setPower(0);
-    lastPos = slideMotor.getCurrentPosition();
-    slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    vertical.setPower(0);
+    lastPos = vertical.getCurrentPosition();
+    vertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
   }
-
-  public void moveSlideEncoderAbs(DcMotor slideMotor, int ticks){ //USE THIS
-    slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    slideMotor.setTargetPosition(ticks);
-    slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    slideMotor.setPower(motorPower);
-    while (opModeIsActive() && slideMotor.isBusy()) {
+  
+  //Absolute positioning algorithm without encoder resets
+  public void moveSlideEncoderAbs(int ticks){
+    vertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    vertical.setTargetPosition(ticks);
+    vertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    vertical.setPower(motorPower);
+    while (opModeIsActive() && vertical.isBusy()) {
       telemetry.addData("LFT, RFT", "Running to %7d", ticks);
       telemetry.addData("LFP, RFP", "Running at %7d",
               vertical.getCurrentPosition()
       );
       telemetry.update();
     }
-    slideMotor.setPower(0.0);
+    vertical.setPower(0.0);
   }
     
 }
