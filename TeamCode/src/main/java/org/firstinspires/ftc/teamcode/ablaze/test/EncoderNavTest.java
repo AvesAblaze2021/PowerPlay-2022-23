@@ -24,20 +24,32 @@ public class EncoderNavTest extends LinearOpMode {
 
         waitForStart();
 
-        encoderDrive(500);
+        encoderDrive(500, "forward");
 
     }
 
-    public void encoderDrive(int position){
+    public void encoderDrive(int position, String direction){
         flMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         blMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         brMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        flMotor.setTargetPosition(position);
-        blMotor.setTargetPosition(position);
-        brMotor.setTargetPosition(position);
-        frMotor.setTargetPosition(position);
+        if(direction == "left"){
+            flMotor.setTargetPosition(-position);
+            blMotor.setTargetPosition(-position);
+            brMotor.setTargetPosition(position);
+            frMotor.setTargetPosition(position);
+        } else if(direction == "right"){
+            flMotor.setTargetPosition(position);
+            blMotor.setTargetPosition(position);
+            brMotor.setTargetPosition(-position);
+            frMotor.setTargetPosition(-position);
+        } else{
+            flMotor.setTargetPosition(position);
+            blMotor.setTargetPosition(position);
+            brMotor.setTargetPosition(position);
+            frMotor.setTargetPosition(position);
+        }
 
         flMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         blMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -49,7 +61,7 @@ public class EncoderNavTest extends LinearOpMode {
         brMotor.setPower(motorPower);
         frMotor.setPower(motorPower);
 
-        while (opModeIsActive() && flMotor.isBusy() && blMotor.isBusy() && brMotor.isBusy() && frMotor.isBusy()) {
+        while (flMotor.isBusy() && blMotor.isBusy() && brMotor.isBusy() && frMotor.isBusy()) {
             continue;
         }
 

@@ -23,17 +23,15 @@ public class LinearSlideTest extends LinearOpMode{
     waitForStart();
     //Test preliminary code first before moving on to the comment block
     moveSlideEncoderAbs(-25); //move the arm up a bit before running
-
     /*
     //In the prelim code: 
         - If the arm tries to move below the robot: Move on to the following code
         - If the arm moves down a bit but not all the way down: Remove Math.abs from moveSlideEncoderRel
     moveSlideEncoderRel(1000);
     sleep(2000);
-    moveSlideEncoderRel(500); 
-    
-
+    moveSlideEncoderRel(500);
     */
+
   }
   
   //Regular timed algorithm

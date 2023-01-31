@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-@Autonomous()
 public class Navigation {
     private SampleMecanumDrive drive;
     private AblazeRobot robot;

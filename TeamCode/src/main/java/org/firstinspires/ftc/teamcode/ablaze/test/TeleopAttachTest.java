@@ -13,13 +13,12 @@ import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 public class TeleopAttachTest extends OpMode {
     private AblazeRobot robot = new AblazeRobot();
     private boolean isLoop = false;
-    private final int[] vertical_level_ticks = {1200, 2000, 3000}; //Tick values for every level
     private DcMotor verticalSlideMotor;
     private Servo clawServo;
     private double motorPower;
-    private int vertical_level = -1; //Default position of arm - set at the end of auto
     private double clawOpenPos = 0.06;
     private double clawClosePos = 0.30;
+    private int lastPos = 0;
     private enum AttachmentState{
         START, //Initial State - gamepad monitoring occurs here
         HIGH,
@@ -27,9 +26,7 @@ public class TeleopAttachTest extends OpMode {
         LOW,
         PICKUP,
         CLOSE, //Close claws
-        OPEN, //Open claws
-        AUTO_PICKUP, //Automates pickup process
-        AUTO_DELIVER //Automates delivery process
+        OPEN //Open claws
     };
     private ElapsedTime runtime = new ElapsedTime();
     private AttachmentState attachState = AttachmentState.START;
@@ -101,31 +98,25 @@ public class TeleopAttachTest extends OpMode {
                 if(gamepad2.right_bumper){
                     attachState = AttachmentState.CLOSE;
                 }
-                if(gamepad2.dpad_up){
-                    attachState = AttachmentState.AUTO_PICKUP;
-                }
-                if(gamepad2.dpad_down){
-                    attachState = AttachmentState.AUTO_DELIVER;
-                }
                 break;
 
             case HIGH: //State for moving arm up one level
-                moveLinearSlidesCustom(2000);
+                moveLinearSlides(2000);
                 attachState = AttachmentState.START;
                 break;
 
             case MED: //State for moving arm down one level
-                moveLinearSlidesCustom(1500);
+                moveLinearSlides(1500);
                 attachState = AttachmentState.START;
                 break;
 
             case LOW:
-                moveLinearSlidesCustom(1000);
+                moveLinearSlides(1000);
                 attachState = AttachmentState.START;
                 break;
 
             case PICKUP:
-                moveLinearSlidesCustom(500);
+                moveLinearSlides(500);
                 attachState = AttachmentState.START;
                 break;
 
@@ -136,24 +127,6 @@ public class TeleopAttachTest extends OpMode {
 
             case CLOSE: //State for closing claw - pickup
                 clawServo.setPosition(clawClosePos);
-                attachState = AttachmentState.START;
-                break;
-            
-            case AUTO_PICKUP: //Automated state for pickup
-                //Enforce initial positions
-                pickup();
-
-                delivery(); //move to delivery position
-
-                attachState = AttachmentState.START;
-                break;
-
-            case AUTO_DELIVER: //Automated state for delivery
-                //Enforce initial positions
-                delivery();
-
-                pickup(); //move to pickup position
-
                 attachState = AttachmentState.START;
                 break;
         }
@@ -211,60 +184,24 @@ public class TeleopAttachTest extends OpMode {
         robot.getRightBackDrive().setPower(rightBackPower);
     }
 
-    //Moves slides to currently set vertical level
-    public void moveLinearSlides(){
+    //Moves slides to tick pos
+    public void moveLinearSlides(int ticks) {
+        int newTicks = Math.abs(ticks - lastPos);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        verticalSlideMotor.setTargetPosition(vertical_level_ticks[vertical_level]);
-        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlideMotor.setPower(motorPower);
-        while (verticalSlideMotor.isBusy()) {
-            telemetry.addData("LFT, RFT", "Running to %7d", vertical_level_ticks[vertical_level]);
-            telemetry.addData("LFP, RFP", "Running at %7d",
-                    verticalSlideMotor.getCurrentPosition()
-            );
-            telemetry.addData("level", vertical_level);
-            telemetry.update();
-        }
-        verticalSlideMotor.setPower(0.0);
-    }
 
-    public void moveLinearSlidesCustom(int ticks){
-        verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        verticalSlideMotor.setTargetPosition(ticks);
+        //Starting motor
+        verticalSlideMotor.setTargetPosition(newTicks);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlideMotor.setPower(motorPower);
-        while (verticalSlideMotor.isBusy()) {
-            telemetry.addData("LFT, RFT", "Running to " + ticks);
-            telemetry.addData("LFT, RFT", "Powered to " + motorPower);
-            telemetry.addData("LFP, RFP", "Running at " +
-                    verticalSlideMotor.getCurrentPosition()
-            );
-            telemetry.update();
-        }
-        verticalSlideMotor.setPower(0.0);
-    }
+        verticalSlideMotor.setPower(0.2);
 
-    //Moves robot to delivery state
-    public void delivery(){
-        clawServo.setPosition(clawClosePos);
-        sleep(500);
-        vertical_level = 1;
-        moveLinearSlides();
-    }
-    
-    //Moves robot to pickup state
-    public void pickup(){
-        clawServo.setPosition(clawOpenPos);
-        sleep(500);
-        vertical_level = 0;
-        moveLinearSlides();
-    }
-    
-    //Async sleep that works with loop() (use milliseconds)
-    public void sleep(int ms){
-        runtime.reset();
-        while(runtime.milliseconds() < ms){
+        //Encoder loop
+        while (verticalSlideMotor.isBusy()) {
             continue;
         }
+
+        //End motion + store current tick value before reset
+        verticalSlideMotor.setPower(0);
+        lastPos = ticks;
+        verticalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }
