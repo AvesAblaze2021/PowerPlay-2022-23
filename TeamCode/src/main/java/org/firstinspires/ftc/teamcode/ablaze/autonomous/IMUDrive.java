@@ -1,4 +1,4 @@
-/*
+
 package org.firstinspires.ftc.teamcode.ablaze.autonomous;
 
 import androidx.annotation.NonNull;
@@ -15,7 +15,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode..ablaze.common.AblazeRobot;
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 
 
@@ -27,6 +26,7 @@ public class IMUDrive {
 
     public void initialize(AblazeRobot ablazeRobot){
         this.ablazeRobot = ablazeRobot;
+        initializeImu();
     }
 
     public void initializeImu() {
@@ -76,6 +76,8 @@ public class IMUDrive {
         /*The gain value determines how sensitive the correction is to direction changes.
          *You will have to experiment with your robot to get small smooth direction changes
          *to stay on a straight line.
+
+         */
 
         double correction, angle, gain = 0.01;
 
@@ -138,4 +140,3 @@ public class IMUDrive {
     }
 
 }
-*/
