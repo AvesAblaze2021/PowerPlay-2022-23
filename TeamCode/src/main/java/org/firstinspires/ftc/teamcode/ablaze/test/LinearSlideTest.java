@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class LinearSlideTest extends LinearOpMode{
   AblazeRobot robot = new AblazeRobot();
   int lastPos = 0; //Used for rel encoder algorithm
-  double motorPower = 0.3;
+  double motorPower = 0.15;
   private DcMotor vertical;
 
   @Override
@@ -21,10 +21,19 @@ public class LinearSlideTest extends LinearOpMode{
     vertical = robot.getVerticalSlideMotor();
 
     waitForStart();
+    //Test preliminary code first before moving on to the comment block
+    moveSlideEncoderAbs(-25); //move the arm up a bit before running
 
-    moveSlideEncoderAbs(vertical, 1000);
+    /*
+    //In the prelim code: 
+        - If the arm tries to move below the robot: Move on to the following code
+        - If the arm moves down a bit but not all the way down: Remove Math.abs from moveSlideEncoderRel
+    moveSlideEncoderRel(1000);
     sleep(2000);
-    moveSlideEncoderAbs(vertical, 500);
+    moveSlideEncoderRel(500); 
+    
+
+    */
   }
   
   //Regular timed algorithm
@@ -61,7 +70,7 @@ public class LinearSlideTest extends LinearOpMode{
     
     //End motion + store current tick value before reset
     vertical.setPower(0);
-    lastPos = vertical.getCurrentPosition();
+    lastPos = ticks;
     vertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
   }
   
