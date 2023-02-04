@@ -87,6 +87,9 @@ public class TeleopAttachTest extends OpMode {
                 if(gamepad2.right_bumper){
                     attachState = AttachmentState.CLOSE;
                 }
+                if(gamepad2.a){
+                    attachState = AttachmentState.DOWN;
+                }
                 break;
 
             case UP:
