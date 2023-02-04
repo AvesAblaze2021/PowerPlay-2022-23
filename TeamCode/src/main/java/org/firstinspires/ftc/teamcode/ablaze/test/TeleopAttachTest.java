@@ -21,10 +21,8 @@ public class TeleopAttachTest extends OpMode {
     private int lastPos = 0;
     private enum AttachmentState{
         START, //Initial State - gamepad monitoring occurs here
-        HIGH,
-        MED,
-        LOW,
-        PICKUP,
+        UP,
+        DOWN,
         CLOSE, //Close claws
         OPEN //Open claws
     };
@@ -80,17 +78,8 @@ public class TeleopAttachTest extends OpMode {
         //Check all states
         switch(attachState){
             case START: //Initial state - all gamepad conditionals go here, leads to other States
-                if(gamepad2.y){
-                    attachState = AttachmentState.HIGH;
-                }
-                if(gamepad2.x){
-                    attachState = AttachmentState.MED;
-                }
-                if(gamepad2.a){
-                    attachState = AttachmentState.LOW;
-                }
-                if(gamepad2.b){
-                    attachState = AttachmentState.PICKUP;
+                if(gamepad2.y) {
+                    attachState = AttachmentState.UP;
                 }
                 if(gamepad2.left_bumper){
                     attachState = AttachmentState.OPEN;
@@ -100,23 +89,13 @@ public class TeleopAttachTest extends OpMode {
                 }
                 break;
 
-            case HIGH: //State for moving arm up one level
-                moveLinearSlides(2000);
+            case UP:
+                moveLinearSlides(100);
                 attachState = AttachmentState.START;
                 break;
 
-            case MED: //State for moving arm down one level
-                moveLinearSlides(1500);
-                attachState = AttachmentState.START;
-                break;
-
-            case LOW:
-                moveLinearSlides(1000);
-                attachState = AttachmentState.START;
-                break;
-
-            case PICKUP:
-                moveLinearSlides(500);
+            case DOWN:
+                moveLinearSlides(-100);
                 attachState = AttachmentState.START;
                 break;
 
@@ -186,22 +165,19 @@ public class TeleopAttachTest extends OpMode {
 
     //Moves slides to tick pos
     public void moveLinearSlides(int ticks) {
-        int newTicks = Math.abs(ticks - lastPos);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //Starting motor
-        verticalSlideMotor.setTargetPosition(newTicks);
+        verticalSlideMotor.setTargetPosition(ticks);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        verticalSlideMotor.setPower(0.2);
-
-        //Encoder loop
-        while (verticalSlideMotor.isBusy()) {
-            continue;
+        verticalSlideMotor.setPower(motorPower);
+        while (verticalSlideMotor.isBusy() && verticalSlideMotor.getCurrentPosition() < 700) {
+            telemetry.addData("LFT, RFT", "Running to %7d", ticks);
+            telemetry.addData("LFP, RFP", "Running at %7d",
+                    verticalSlideMotor.getCurrentPosition()
+            );
+            telemetry.update();
         }
-
-        //End motion + store current tick value before reset
         verticalSlideMotor.setPower(0);
-        lastPos = ticks;
         verticalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+
 }

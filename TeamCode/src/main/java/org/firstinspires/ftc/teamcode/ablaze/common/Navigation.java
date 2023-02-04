@@ -39,11 +39,6 @@ public class Navigation {
         frMotor = robot.getRightFrontDrive();
         blMotor = robot.getLeftBackDrive();
         brMotor = robot.getRightBackDrive();
-
-        //leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void encoderDrive(int position, String direction){

@@ -23,7 +23,7 @@ public class AblazeTFODAutonomousTest extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
-            zone = tfod.detectElement();
+            zone = tfod.detectElement(this);
 
             telemetry.addData("Zone #: ", zone);
 

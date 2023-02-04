@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ablaze.autonomous;
 import android.sax.Element;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -16,10 +17,12 @@ import java.util.List;
 public class AblazeTFOD {
     private static final String TFOD_MODEL_ASSET = "model_20221128_154930.tflite";
     private static final String[] LABELS = {
-            "Plane",
             "Fire",
-            "Jacket"
+            "Jacket",
+            "Plane"
+
     };
+
 
     private static final String VUFORIA_KEY =
             "ASgJ37P/////AAABmeZUclRtJkpCrvmEuygWpAwPNksTf+k3zPsoV573qLI1dZpk" +
@@ -34,32 +37,34 @@ public class AblazeTFOD {
     private AblazeRobot ablazeRobot;
     private Recognition element = null;
     private ElapsedTime runtime = new ElapsedTime();
-    private int timeout = 500;
+    private int timeout = 1000;
 
     VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
 
 
-    public int detectElement() {
+    public int detectElement(LinearOpMode l) {
         // Comment out multiple try... just trying only once
         // Keep trying until an object is detected or time is expired
         //runtime.reset();
         //while (runtime.milliseconds() < timeout) {
         List<Recognition> recognitions = tfod.getRecognitions();
-        if (recognitions != null) {
-            for (Recognition recognition : recognitions) {
-                if (recognition.getLabel().equals("Plane")) {
-                    element = recognition;
-                    return 1;
-                } else if (recognition.getLabel().equals("Fire")) {
-                    element = recognition;
-                    return 2;
-                } else if (recognition.getLabel().equals("Jacket")) {
-                    element = recognition;
-                    return 3;
-                }
-            }
-        }
+          while(runtime.milliseconds() < timeout) {
+              if (recognitions != null) {
+                  for (Recognition recognition : recognitions) {
+                      if (recognition.getLabel().equals("Plane")) {
+                          element = recognition;
+                          return 1;
+                      } else if (recognition.getLabel().equals("Fire")) {
+                          element = recognition;
+                          return 2;
+                      } else if (recognition.getLabel().equals("Jacket")) {
+                          element = recognition;
+                          return 3;
+                      }
+                  }
+              }
+          }
         //}
         return -1;
     }

@@ -12,7 +12,7 @@ public class EncoderNavTest extends LinearOpMode {
     private DcMotor frMotor;
     private DcMotor brMotor;
     private DcMotor blMotor;
-    private double motorPower = 0.3;
+    private double motorPower = 0.5;
 
     @Override
     public void runOpMode() {
@@ -22,9 +22,34 @@ public class EncoderNavTest extends LinearOpMode {
         brMotor = robot.getRightBackDrive();
         blMotor = robot.getLeftBackDrive();
 
-        waitForStart();
+        flMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        brMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        blMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        encoderDrive(500, "forward");
+        waitForStart();
+        /*
+        Zone 1:
+        encoderDrive(100, "forward");
+        encoderDrive(950, "left");
+        encoderDrive(1200, "forward");
+        encoderDrive(1000, "right");
+        encoderDrive(1000, "forward");
+         */
+
+        /*
+        Zone 2:
+        encoderDrive(1000, "forward");
+         */
+
+        /*
+        Zone 3:
+        encoderDrive(300, "forward");
+        encoderDrive(1100, "right");
+        encoderDrive(900, "forward");
+        encoderDrive(900, "left");
+        encoderDrive(1000, "forward");
+         */
 
     }
 
@@ -35,20 +60,20 @@ public class EncoderNavTest extends LinearOpMode {
         frMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         if(direction == "left"){
-            flMotor.setTargetPosition(-position);
-            blMotor.setTargetPosition(-position);
-            brMotor.setTargetPosition(position);
-            frMotor.setTargetPosition(position);
-        } else if(direction == "right"){
             flMotor.setTargetPosition(position);
             blMotor.setTargetPosition(position);
             brMotor.setTargetPosition(-position);
             frMotor.setTargetPosition(-position);
+        } else if(direction == "right"){
+            flMotor.setTargetPosition(-position);
+            blMotor.setTargetPosition(-position);
+            brMotor.setTargetPosition(position);
+            frMotor.setTargetPosition(position);
         } else{
             flMotor.setTargetPosition(position);
             blMotor.setTargetPosition(position);
-            brMotor.setTargetPosition(position);
-            frMotor.setTargetPosition(position);
+            brMotor.setTargetPosition(1000);
+            frMotor.setTargetPosition(1000);
         }
 
         flMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -58,8 +83,8 @@ public class EncoderNavTest extends LinearOpMode {
 
         flMotor.setPower(motorPower);
         blMotor.setPower(motorPower);
-        brMotor.setPower(motorPower);
-        frMotor.setPower(motorPower);
+        brMotor.setPower(0.1);
+        frMotor.setPower(0.1);
 
         while (flMotor.isBusy() && blMotor.isBusy() && brMotor.isBusy() && frMotor.isBusy()) {
             continue;
@@ -69,5 +94,10 @@ public class EncoderNavTest extends LinearOpMode {
         blMotor.setPower(0.0);
         brMotor.setPower(0.0);
         frMotor.setPower(0.0);
+
+        flMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        blMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        brMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }

@@ -21,8 +21,7 @@ public class AblazeAuto extends LinearOpMode {
     AblazeRobot robot = new AblazeRobot();
     Navigation nav = new Navigation();
     AblazeTFOD tfod = new AblazeTFOD();
-    private final int[] vertical_level_ticks = {100, 1200, 3800}; //Tick values for every level
-    private int signalZone = 2; //temporary
+    private int signalZone = 0;
     private DcMotor verticalSlideMotor;
     private Servo clawServo;
     private double clawOpenPos = 0.5;
@@ -43,6 +42,7 @@ public class AblazeAuto extends LinearOpMode {
         telemetry.addData("Status", "Initializing");
         telemetry.update();
 
+
         //Set motor power
         motorPower = robot.getDefaultPower();
 
@@ -53,8 +53,6 @@ public class AblazeAuto extends LinearOpMode {
         verticalSlideMotor = robot.getVerticalSlideMotor();
         clawServo = robot.getClawServo();
 
-        //Init state set after start b/c of size limitations
-
         //Notify init end
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -63,24 +61,33 @@ public class AblazeAuto extends LinearOpMode {
 
         //Detect + park into signal zone
         //CHANGE ENCODER POSITIONS
-        signalZone = tfod.detectElement();
-        if(signalZone == 2){
-            nav.encoderDrive(500, "forward");
-        } else if(signalZone == 1){
-            nav.encoderDrive(500, "left");
-            nav.encoderDrive(500, "forward");
-            nav.encoderDrive(500, "right");
-            nav.encoderDrive(500, "forward");
-        } else{
-            nav.encoderDrive(500, "right");
-            nav.encoderDrive(500, "forward");
-            nav.encoderDrive(500, "left");
-            nav.encoderDrive(500, "forward");
+        signalZone = tfod.detectElement(this);
+        sleep(1000);
+
+        telemetry.addData("the signal is",":"+signalZone);
+        telemetry.update();
+        if (signalZone == 2) {
+            nav.encoderDrive(1000, "forward");
+        } else if (signalZone == 1) {
+            nav.encoderDrive(100, "forward");
+            nav.encoderDrive(950, "left");
+            nav.encoderDrive(1200, "forward");
+            nav.encoderDrive(1000, "right");
+            nav.encoderDrive(1000, "forward");
+        } else if(signalZone == 3) {
+            nav.encoderDrive(300, "forward");
+            nav.encoderDrive(1100, "right");
+            nav.encoderDrive(900, "forward");
+            nav.encoderDrive(900, "left");
+            nav.encoderDrive(1000, "forward");
+        }
+        else {
+            telemetry.addData("No find", "");
+            telemetry.update();
         }
 
         //Set Teleop init state
         clawServo.setPosition(clawOpenPos);
-        moveLinearSlides(0); //will sleep for 500 ms before next command
 
         /*
         //Phase 1: Setup - get scissors + arm ready
@@ -139,21 +146,20 @@ public class AblazeAuto extends LinearOpMode {
         */
     }
 
-    public void moveLinearSlides(int level){
+    public void moveLinearSlides(int ticks){
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        verticalSlideMotor.setTargetPosition(vertical_level_ticks[level]);
+        verticalSlideMotor.setTargetPosition(ticks);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         verticalSlideMotor.setPower(motorPower);
         while (verticalSlideMotor.isBusy()) {
-            telemetry.addData("LFT, RFT", "Running to %7d", vertical_level_ticks[level]);
+            telemetry.addData("LFT, RFT", "Running to %7d", ticks);
             telemetry.addData("LFP, RFP", "Running at %7d",
                     verticalSlideMotor.getCurrentPosition()
             );
-            telemetry.addData("level", level);
             telemetry.update();
         }
         verticalSlideMotor.setPower(motorPower);
-        sleep(500);
+        verticalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }
 
