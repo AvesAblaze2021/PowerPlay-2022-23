@@ -43,7 +43,7 @@ public class AblazeRobot {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        verticalSlideMotor.setDirection(DcMotor.Direction.REVERSE);
+        verticalSlideMotor.setDirection(DcMotor.Direction.FORWARD);
         verticalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         verticalSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
