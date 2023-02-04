@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ablaze.common.AblazeRobot;
 
-@TeleOp (name = "TeleOpAttachTest")
+@TeleOp(name = "TeleOpAttachTest")
 public class TeleopAttachTest extends OpMode {
     private AblazeRobot robot = new AblazeRobot();
     private boolean isLoop = false;
@@ -19,13 +19,16 @@ public class TeleopAttachTest extends OpMode {
     private double clawOpenPos = 0.06;
     private double clawClosePos = 0.30;
     private int lastPos = 0;
-    private enum AttachmentState{
+
+    private enum AttachmentState {
         START, //Initial State - gamepad monitoring occurs here
         UP,
         DOWN,
         CLOSE, //Close claws
         OPEN //Open claws
-    };
+    }
+
+    ;
     private ElapsedTime runtime = new ElapsedTime();
     private AttachmentState attachState = AttachmentState.START;
 
@@ -74,20 +77,20 @@ public class TeleopAttachTest extends OpMode {
      *
      */
     @Override
-    public void loop(){
+    public void loop() {
         //Check all states
-        switch(attachState){
+        switch (attachState) {
             case START: //Initial state - all gamepad conditionals go here, leads to other States
-                if(gamepad2.y) {
+                if (gamepad2.y) {
                     attachState = AttachmentState.UP;
                 }
-                if(gamepad2.left_bumper){
+                if (gamepad2.left_bumper) {
                     attachState = AttachmentState.OPEN;
                 }
-                if(gamepad2.right_bumper){
+                if (gamepad2.right_bumper) {
                     attachState = AttachmentState.CLOSE;
                 }
-                if(gamepad2.a){
+                if (gamepad2.a) {
                     attachState = AttachmentState.DOWN;
                 }
                 break;
@@ -134,25 +137,22 @@ public class TeleopAttachTest extends OpMode {
         double leftFrontPower = drivingPower - turningPower - strafing;
         double rightFrontPower = drivingPower + turningPower + strafing;
         double rightBackPower = drivingPower + turningPower - strafing;
-        if(gamepad1.left_bumper) {
+        if (gamepad1.left_bumper) {
             leftBackPower /= 3;
             leftFrontPower /= 3;
             rightFrontPower /= 3;
             rightBackPower /= 3;
-        }
-        else if(gamepad1.right_bumper) {
+        } else if (gamepad1.right_bumper) {
             leftBackPower /= 1.2;
             leftFrontPower /= 1.2;
             rightFrontPower /= 1.2;
             rightBackPower /= 1.2;
-        }
-        else if (isLoop){
+        } else if (isLoop) {
             leftBackPower /= 1.6;
             leftFrontPower /= 1.6;
             rightFrontPower /= 1.6;
             rightBackPower /= 1.6;
-        }
-        else{
+        } else {
             leftBackPower /= 1.6;
             leftFrontPower /= 1.6;
             rightFrontPower /= 1.6;
@@ -172,7 +172,7 @@ public class TeleopAttachTest extends OpMode {
         verticalSlideMotor.setTargetPosition(ticks);
         verticalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         verticalSlideMotor.setPower(motorPower);
-        while (verticalSlideMotor.isBusy() && verticalSlideMotor.getCurrentPosition() < 700) {
+        while (verticalSlideMotor.isBusy() && Math.abs(verticalSlideMotor.getCurrentPosition()) < 2 * ticks) {
             telemetry.addData("LFT, RFT", "Running to %7d", ticks);
             telemetry.addData("LFP, RFP", "Running at %7d",
                     verticalSlideMotor.getCurrentPosition()
